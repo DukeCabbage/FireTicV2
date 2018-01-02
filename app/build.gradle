@@ -1,0 +1,115 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+//apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'project-report'
+
+android {
+    def versionMajor = 0
+    def versionMinor = 0
+    def versionPatch = 1
+    def buildNumber = 0
+
+    def versionCodeBase = ((versionMajor * 100 + versionMinor) * 100 + versionPatch) * 100 + buildNumber
+    def debugVersionNameSuffix = "debug_${Character.toChars(97 + buildNumber)}"
+    println "Version code : $versionCodeBase"
+    println "Version name suffix: ${Character.toChars(97 + buildNumber)}"
+    println ""
+
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.cabbage.fireticv2"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode versionCodeBase
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    File propsFile = rootProject.file("keystore.properties")
+    boolean localKeyStore = propsFile.exists()
+    if (localKeyStore) {
+        println 'Using local key store'
+
+        Properties properties = new Properties()
+        properties.load(propsFile.newDataInputStream())
+
+        signingConfigs {
+            debug {
+                storeFile = file(properties.getProperty("debugStoreFile"))
+                storePassword = properties.getProperty("debugStorePassword")
+                keyAlias = properties.getProperty("debugKeyAlias")
+                keyPassword = properties.getProperty("debugKeyPassword")
+            }
+
+            release {
+                storeFile = file(properties.getProperty("releaseStoreFile"))
+                storePassword = properties.getProperty("releaseStorePassword")
+                keyAlias = properties.getProperty("releaseKeyAlias")
+                keyPassword = properties.getProperty("releaseKeyPassword")
+
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            versionNameSuffix debugVersionNameSuffix
+
+            if (localKeyStore) signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            if (localKeyStore) signingConfig signingConfigs.release
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // ReactiveX
+    implementation "io.reactivex.rxjava2:rxjava:$rx_java2_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rx_kotlin_version"
+
+    implementation "com.tbruyelle.rxpermissions2:rxpermissions:$rx_permission"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rx_binding"
+    implementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences"
+
+    // Dagger 2
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // Butter Knife
+    implementation "com.jakewharton:butterknife:$butter_knife_version"
+    kapt "com.jakewharton:butterknife-compiler:$butter_knife_version"
+
+    // Dart
+    implementation "com.f2prateek.dart:dart:$dart_version"
+    kapt "com.f2prateek.dart:dart-processor:$dart_version"
+
+    // Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
