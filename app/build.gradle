@@ -107,6 +107,13 @@ dependencies {
     implementation "com.f2prateek.dart:dart:$dart_version"
     kapt "com.f2prateek.dart:dart-processor:$dart_version"
 
+    // Firebase
+    implementation "com.google.firebase:firebase-auth:$firebase_version"
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$arch_comp_version"
+    kapt "android.arch.lifecycle:compiler:$arch_comp_version"
+
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
 
@@ -114,3 +121,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+
+apply plugin: 'com.google.gms.google-services'
