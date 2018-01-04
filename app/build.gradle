@@ -19,7 +19,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.cabbage.fireticv2"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode versionCodeBase
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"

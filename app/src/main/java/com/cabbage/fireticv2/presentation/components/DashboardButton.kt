@@ -1,4 +1,4 @@
-package com.cabbage.fireticv2.ui
+package com.cabbage.fireticv2.presentation.components
 
 import android.content.Context
 import android.content.res.TypedArray
