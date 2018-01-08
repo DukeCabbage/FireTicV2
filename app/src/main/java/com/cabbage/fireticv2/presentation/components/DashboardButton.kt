@@ -14,6 +14,8 @@ import kotlinx.android.synthetic.main.dashboard_button.view.*
 class DashboardButton(context: Context, attributeSet: AttributeSet)
     : CardView(context, attributeSet) {
 
+    private val defaultContentTint get() = resources.getColor(R.color.colorTextPrimary)
+
     private var image: Drawable
     private var label: String
     private var contentTint: Int = 0
@@ -21,14 +23,13 @@ class DashboardButton(context: Context, attributeSet: AttributeSet)
     init {
         val typedArray: TypedArray = context.theme
                 .obtainStyledAttributes(attributeSet,
-                                        R.styleable.DashboardButton,
-                                        0, 0)
+                        R.styleable.DashboardButton,
+                        0, 0)
 
         try {
             image = typedArray.getDrawable(R.styleable.DashboardButton_image)
             label = typedArray.getString(R.styleable.DashboardButton_label)
-            contentTint = typedArray.getColor(R.styleable.DashboardButton_contentTint,
-                                              resources.getColor(R.color.colorTextPrimary))
+            contentTint = typedArray.getColor(R.styleable.DashboardButton_contentTint, defaultContentTint)
             View.inflate(context, R.layout.dashboard_button, this)
         } finally {
             typedArray.recycle()

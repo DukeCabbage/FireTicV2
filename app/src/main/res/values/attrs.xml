@@ -5,4 +5,17 @@
         <attr name="label" format="string"/>
         <attr name="contentTint" format="color"/>
     </declare-styleable>
+    
+    <declare-styleable name="GameboardSector">
+        <attr name="horizontalOrder" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+        <attr name="verticalOrder" format="enum">
+            <enum name="top" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="bottom" value="2"/>
+        </attr>
+    </declare-styleable>
 </resources>

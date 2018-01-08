@@ -2,6 +2,7 @@ package com.cabbage.fireticv2.presentation.home
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -10,13 +11,14 @@ import android.widget.Toast
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.cabbage.fireticv2.R
-import com.google.firebase.auth.FirebaseAuth
+import com.cabbage.fireticv2.presentation.GameboardActivity
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.include_appbar_toolbar.*
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity(),
-                     MainContract.View {
+        MainContract.View {
 
     lateinit private var mPresenter: MainContract.Presenter
     lateinit private var mViewModel: MainViewModel
@@ -24,6 +26,12 @@ class MainActivity : AppCompatActivity(),
     @OnClick(R.id.btn_menu_about)
     fun onClick(v: View) {
         mPresenter.requestVersionInfo(v.context)
+    }
+
+    @OnClick(R.id.btn_menu_solo)
+    fun soloOnClick(v: View) {
+        val intent = Intent(this, GameboardActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

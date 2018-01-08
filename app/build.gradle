@@ -7,7 +7,7 @@ apply plugin: 'project-report'
 android {
     def versionMajor = 0
     def versionMinor = 0
-    def versionPatch = 1
+    def versionPatch = 2
     def buildNumber = 0
 
     def versionCodeBase = ((versionMajor * 100 + versionMinor) * 100 + versionPatch) * 100 + buildNumber
@@ -19,7 +19,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.cabbage.fireticv2"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode versionCodeBase
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
