@@ -93,9 +93,9 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
 
     fun moveMade(gridIndex: Int, byPlayer: Int): Boolean {
         when (byPlayer) {
-            Konst.Player1Token -> this.gridList[gridIndex].setBackgroundColor(colorPlayer1)
-            Konst.Player2Token -> this.gridList[gridIndex].setBackgroundColor(colorPlayer2)
-            Konst.OpenGrid -> this.gridList[gridIndex].setBackgroundColor(colorWhiteSmoke)
+            Player.One.token -> this.gridList[gridIndex].setBackgroundColor(colorPlayer1)
+            Player.Two.token -> this.gridList[gridIndex].setBackgroundColor(colorPlayer2)
+            Player.Open.token -> this.gridList[gridIndex].setBackgroundColor(colorWhiteSmoke)
             else -> return false
         }
 
@@ -104,8 +104,8 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
 
     fun setLocalWinner(player: Int) {
         when (player) {
-            Konst.Player1Token -> this.sectorTableLayout.setBackgroundColor(colorPlayer1)
-            Konst.Player2Token -> this.sectorTableLayout.setBackgroundColor(colorPlayer2)
+            Player.One.token -> this.sectorTableLayout.setBackgroundColor(colorPlayer1)
+            Player.Two.token -> this.sectorTableLayout.setBackgroundColor(colorPlayer2)
             else -> this.sectorTableLayout.setBackgroundColor(colorDivider)
         }
     }

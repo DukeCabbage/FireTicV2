@@ -1,32 +1,38 @@
 package com.cabbage.fireticv2.presentation
 
+import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.FrameLayout
 import android.widget.Toast
 import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.ViewUtil
 import com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
-import com.cabbage.fireticv2.presentation.components.gameboard.Konst
+import com.cabbage.fireticv2.presentation.components.gameboard.Player
 import kotlinx.android.synthetic.main.activity_gameboard.*
 import kotlinx.android.synthetic.main.include_appbar_collapsing.*
+import kotlinx.android.synthetic.main.include_player_status.*
+import timber.log.Timber
 
 class GameboardActivity : AppCompatActivity(),
                           GameboardSector.Callback {
 
-    private var currentPlayer = Konst.Player1Token
+    private var currentPlayer = Player.One
+    private var windowWidth: Int? = null
 
     override fun onUserClick(sectorIndex: Int, gridIndex: Int): Int {
         Toast.makeText(this, "$sectorIndex, $gridIndex", Toast.LENGTH_SHORT).show()
-        testSector.moveMade(gridIndex, currentPlayer)
-        testSector.setLocalWinner(currentPlayer)
-        val returnValue = currentPlayer
-        when (currentPlayer) {
-            Konst.Player1Token -> currentPlayer = Konst.Player2Token
-            Konst.Player2Token -> currentPlayer = Konst.Player1Token
-        }
 
-        return returnValue
+        val currentPlayerToken = currentPlayer.token
+        testSector.moveMade(gridIndex, currentPlayerToken)
+//        testSector.setLocalWinner(currentPlayerToken)
+
+        val nextPlayer = currentPlayer.toggle()
+        togglePlayerStatusBar(nextPlayer)
+        currentPlayer = nextPlayer
+
+        return currentPlayerToken
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +40,25 @@ class GameboardActivity : AppCompatActivity(),
         setContentView(R.layout.activity_gameboard)
         ButterKnife.bind(this)
         setUpActionBar()
+
+        testSector.setCallback(this)
+        testSector.setOnClickListener { it -> (it as GameboardSector).isActive = true }
+        fabTest.setOnClickListener { togglePlayerStatusBar(currentPlayer.toggle()) }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val size = Point()
+        windowManager.defaultDisplay.getSize(size)
+        windowWidth = size.x
+
+        val lp = barContainer.layoutParams as FrameLayout.LayoutParams
+        lp.setMargins(-size.x / 2, lp.topMargin, -size.x / 2, lp.bottomMargin)
+    }
+
+    private fun setUpActionBar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Compensate for translucent status bar
         ViewUtil.getStatusBarHeight(this).let { statusBarHeight ->
@@ -45,17 +70,25 @@ class GameboardActivity : AppCompatActivity(),
 
             toolbar.layoutParams.height += statusBarHeight
         }
-
-        testSector.setCallback(this)
-        testSector.setOnClickListener { view ->
-            (view as GameboardSector).let {
-                view.isActive = true
-            }
-        }
     }
 
-    private fun setUpActionBar() {
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    private fun togglePlayerStatusBar(nextPlayer: Player, isWinner: Boolean = false) {
+        Timber.d("toggleUserIndicator %d", nextPlayer.token)
+        windowWidth?.let { width ->
+            val animator = barContainer.animate()
+            animator.duration = 667L
+            val shiftAmount = if (isWinner)
+                0.6f * width
+            else 0.3f * width
+
+            when (nextPlayer) {
+                Player.One -> animator.translationX(shiftAmount)
+                Player.Two -> animator.translationX(-shiftAmount)
+                else -> {
+                    animator.translationX(0f)
+                    animator.duration = 0L
+                }
+            }
+        }
     }
 }

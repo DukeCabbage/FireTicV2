@@ -5,14 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
-        android:id="@+id/testSector"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center"
-        app:horizontalOrder="center"
-        app:verticalOrder="center"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorGrey400"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        
+        <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+            android:id="@+id/testSector"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            app:horizontalOrder="center"
+            app:verticalOrder="center"/>
+        
+        <include layout="@layout/include_player_status"/>
+    </FrameLayout>
     
-    <include layout="@layout/include_appbar_basic"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_exit_to_app_24dp"
+        android:tint="#FFFFFF"
+        app:backgroundTint="@color/colorSecondary"
+        app:elevation="4dp"/>
+    
+    <include
+        layout="@layout/include_appbar_basic"
+        android:visibility="visible"/>
 
 </android.support.design.widget.CoordinatorLayout>
