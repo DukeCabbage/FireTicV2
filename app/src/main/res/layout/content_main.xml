@@ -1,69 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="#eeeeee"
-             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-             tools:showIn="@layout/activity_main">
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingBottom="0dp"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="0dp"
+    app:behavior_overlapTop="80dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_main">
 
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnCount="3"
-        android:paddingBottom="32dp"
-        android:paddingEnd="32dp"
-        android:paddingStart="32dp"
-        android:paddingTop="96dp"
-        android:rowCount="3">
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical">
 
-        <com.cabbage.fireticv2.presentation.components.DashboardButton
-            style="@style/DashboardButton"
-            android:id="@+id/btn_menu_solo"
-            android:layout_column="0"
-            android:layout_row="0"
-            app:image="@drawable/ic_exit_to_app_80dp"
-            app:label="@string/menu_solo"/>
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:columnCount="3"
+            android:padding="16dp"
+            android:rowCount="3"
+            android:visibility="visible">
 
-        <com.cabbage.fireticv2.presentation.components.DashboardButton
-            style="@style/DashboardButton"
-            android:id="@+id/btn_menu_online"
-            android:layout_column="2"
-            android:layout_row="0"
-            app:image="@drawable/ic_exit_to_app_24dp"
-            app:label="@string/menu_online"/>
+            <com.cabbage.fireticv2.presentation.components.DashboardButton
+                style="@style/DashboardButton"
+                android:id="@+id/btn_menu_solo"
+                android:layout_column="0"
+                android:layout_row="0"
+                app:image="@drawable/ic_exit_to_app_80dp"
+                app:label="@string/menu_solo"/>
 
-        <com.cabbage.fireticv2.presentation.components.DashboardButton
-            style="@style/DashboardButton"
-            android:id="@+id/btn_menu_statistics"
-            android:layout_column="0"
-            android:layout_row="2"
-            app:image="@drawable/ic_exit_to_app_80dp"
-            app:label="@string/menu_statistics"/>
+            <com.cabbage.fireticv2.presentation.components.DashboardButton
+                style="@style/DashboardButton"
+                android:id="@+id/btn_menu_online"
+                android:layout_column="2"
+                android:layout_row="0"
+                app:image="@drawable/ic_exit_to_app_24dp"
+                app:label="@string/menu_online"/>
 
-        <com.cabbage.fireticv2.presentation.components.DashboardButton
-            style="@style/DashboardButton"
-            android:id="@+id/btn_menu_about"
-            android:layout_column="2"
-            android:layout_row="2"
-            app:image="@drawable/ic_exit_to_app_24dp"
-            app:label="@string/menu_about"/>
+            <com.cabbage.fireticv2.presentation.components.DashboardButton
+                style="@style/DashboardButton"
+                android:id="@+id/btn_menu_statistics"
+                android:layout_column="0"
+                android:layout_row="2"
+                app:image="@drawable/ic_exit_to_app_80dp"
+                app:label="@string/menu_statistics"/>
 
-        <Space
-            android:layout_width="24dp"
-            android:layout_column="1"
-            android:layout_columnWeight="0"
-            android:layout_row="0"
-            android:layout_rowSpan="3"
-            android:layout_rowWeight="1"/>
+            <com.cabbage.fireticv2.presentation.components.DashboardButton
+                style="@style/DashboardButton"
+                android:id="@+id/btn_menu_about"
+                android:layout_column="2"
+                android:layout_row="2"
+                app:image="@drawable/ic_exit_to_app_24dp"
+                app:label="@string/menu_about"/>
 
-        <Space
-            android:layout_height="16dp"
-            android:layout_column="0"
-            android:layout_columnSpan="3"
-            android:layout_columnWeight="1"
-            android:layout_row="1"
-            android:layout_rowWeight="0"/>
-    </GridLayout>
-</FrameLayout>
+            <Space
+                android:layout_width="24dp"
+                android:layout_column="1"
+                android:layout_columnWeight="0"
+                android:layout_row="0"
+                android:layout_rowSpan="3"
+                android:layout_rowWeight="1"/>
+
+            <Space
+                android:layout_height="16dp"
+                android:layout_column="0"
+                android:layout_columnSpan="3"
+                android:layout_columnWeight="1"
+                android:layout_row="1"
+                android:layout_rowWeight="0"/>
+        </GridLayout>
+
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="900dp"-->
+            <!--android:layout_margin="16dp"-->
+            <!--android:background="@color/colorSecondary"-->
+            <!--android:elevation="2dp"/>-->
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

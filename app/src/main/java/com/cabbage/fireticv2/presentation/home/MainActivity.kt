@@ -11,14 +11,15 @@ import android.widget.Toast
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.cabbage.fireticv2.R
+import com.cabbage.fireticv2.ViewUtil
 import com.cabbage.fireticv2.presentation.GameboardActivity
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.include_appbar_toolbar.*
+import kotlinx.android.synthetic.main.include_appbar_collapsing.*
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity(),
-        MainContract.View {
+                     MainContract.View {
 
     lateinit private var mPresenter: MainContract.Presenter
     lateinit private var mViewModel: MainViewModel
@@ -39,6 +40,27 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
+
+        // Compensate for translucent status bar
+        ViewUtil.getStatusBarHeight(this).let { statusBarHeight ->
+            toolbar.setPadding(
+                    toolbar.paddingLeft,
+                    toolbar.paddingTop + statusBarHeight,
+                    toolbar.paddingRight,
+                    toolbar.paddingBottom)
+
+            toolbar.layoutParams.height += statusBarHeight
+            appBarLayout.layoutParams.height += statusBarHeight
+        }
+
+        //        appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+        //            Timber.d("$verticalOffset, ${appBarLayout.totalScrollRange}")
+        //            if (-verticalOffset > 0.5 * appBarLayout.totalScrollRange) {
+        //                ViewCompat.setElevation(appBarLayout, ViewUtil.dpToPixel(this, 4))
+        //            } else {
+        //                ViewCompat.setElevation(appBarLayout, ViewUtil.dpToPixel(this, 0))
+        //            }
+        //        }
 
         mPresenter = MainPresenter(this)
 

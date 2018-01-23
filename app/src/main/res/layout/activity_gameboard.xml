@@ -13,6 +13,6 @@
         app:horizontalOrder="center"
         app:verticalOrder="center"/>
     
-    <include layout="@layout/include_appbar_toolbar"/>
+    <include layout="@layout/include_appbar_basic"/>
 
 </android.support.design.widget.CoordinatorLayout>

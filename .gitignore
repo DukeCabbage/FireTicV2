@@ -8,17 +8,8 @@ ehthumbs.db
 Thumbs.db
 
 # Built application files
-*.apk
-*.ap_
-/*/build/
-/*/*/build
 build/
 
-# Files for the ART/Dalvik VM
-*.dex
-
-# Java class files
-*.class
 
 # Generated files
 bin/

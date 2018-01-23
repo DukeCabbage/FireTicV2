@@ -5,10 +5,11 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
+import com.cabbage.fireticv2.ViewUtil
 import com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
 import com.cabbage.fireticv2.presentation.components.gameboard.Konst
 import kotlinx.android.synthetic.main.activity_gameboard.*
-import kotlinx.android.synthetic.main.include_appbar_toolbar.*
+import kotlinx.android.synthetic.main.include_appbar_collapsing.*
 
 class GameboardActivity : AppCompatActivity(),
                           GameboardSector.Callback {
@@ -33,6 +34,17 @@ class GameboardActivity : AppCompatActivity(),
         setContentView(R.layout.activity_gameboard)
         ButterKnife.bind(this)
         setUpActionBar()
+
+        // Compensate for translucent status bar
+        ViewUtil.getStatusBarHeight(this).let { statusBarHeight ->
+            toolbar.setPadding(
+                    toolbar.paddingLeft,
+                    toolbar.paddingTop + statusBarHeight,
+                    toolbar.paddingRight,
+                    toolbar.paddingBottom)
+
+            toolbar.layoutParams.height += statusBarHeight
+        }
 
         testSector.setCallback(this)
         testSector.setOnClickListener { view ->
