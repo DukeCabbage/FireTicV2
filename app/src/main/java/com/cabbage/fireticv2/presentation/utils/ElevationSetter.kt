@@ -1,4 +1,4 @@
-package com.cabbage.fireticv2.presentation.components.gameboard
+package com.cabbage.fireticv2.presentation.utils
 
 import android.animation.Animator
 import android.view.View

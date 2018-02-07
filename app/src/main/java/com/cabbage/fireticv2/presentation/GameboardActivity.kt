@@ -7,9 +7,9 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
-import com.cabbage.fireticv2.ViewUtil
 import com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
 import com.cabbage.fireticv2.presentation.components.gameboard.Player
+import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import kotlinx.android.synthetic.main.activity_gameboard.*
 import kotlinx.android.synthetic.main.include_appbar_collapsing.*
 import kotlinx.android.synthetic.main.include_player_status.*
@@ -21,19 +21,19 @@ class GameboardActivity : AppCompatActivity(),
     private var currentPlayer = Player.One
     private var windowWidth: Int? = null
 
-    override fun onUserClick(sectorIndex: Int, gridIndex: Int): Int {
-        Toast.makeText(this, "$sectorIndex, $gridIndex", Toast.LENGTH_SHORT).show()
-
-        val currentPlayerToken = currentPlayer.token
-        testSector.moveMade(gridIndex, currentPlayerToken)
-//        testSector.setLocalWinner(currentPlayerToken)
-
-        val nextPlayer = currentPlayer.toggle()
-        togglePlayerStatusBar(nextPlayer)
-        currentPlayer = nextPlayer
-
-        return currentPlayerToken
-    }
+    //    override fun onUserClick(sectorIndex: Int, gridIndex: Int): Int {
+//        Toast.makeText(this, "$sectorIndex, $gridIndex", Toast.LENGTH_SHORT).show()
+//
+//        val currentPlayerToken = currentPlayer.token
+//        testSector.moveMade(gridIndex, currentPlayerToken)
+////        testSector.setLocalWinner(currentPlayerToken)
+//
+//        val nextPlayer = currentPlayer.toggle()
+//        togglePlayerStatusBar(nextPlayer)
+//        currentPlayer = nextPlayer
+//
+//        return currentPlayerToken
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +41,7 @@ class GameboardActivity : AppCompatActivity(),
         ButterKnife.bind(this)
         setUpActionBar()
 
-        testSector.setCallback(this)
-        testSector.setOnClickListener { it -> (it as GameboardSector).isActive = true }
+        gameboard.setCallback(this)
         fabTest.setOnClickListener { togglePlayerStatusBar(currentPlayer.toggle()) }
     }
 
@@ -54,6 +53,10 @@ class GameboardActivity : AppCompatActivity(),
 
         val lp = barContainer.layoutParams as FrameLayout.LayoutParams
         lp.setMargins(-size.x / 2, lp.topMargin, -size.x / 2, lp.bottomMargin)
+    }
+
+    override fun onUserClick(sectorIndex: Int, gridIndex: Int, currentData: List<Int>) {
+        Toast.makeText(this, "$sectorIndex $gridIndex", Toast.LENGTH_SHORT).show()
     }
 
     private fun setUpActionBar() {
@@ -90,5 +93,7 @@ class GameboardActivity : AppCompatActivity(),
                 }
             }
         }
+
+        currentPlayer = nextPlayer
     }
 }

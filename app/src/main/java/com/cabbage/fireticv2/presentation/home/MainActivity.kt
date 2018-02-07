@@ -11,7 +11,7 @@ import android.widget.Toast
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.cabbage.fireticv2.R
-import com.cabbage.fireticv2.ViewUtil
+import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import com.cabbage.fireticv2.presentation.GameboardActivity
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*

@@ -1,4 +1,4 @@
-package com.cabbage.fireticv2
+package com.cabbage.fireticv2.presentation.utils
 
 import android.content.Context
 

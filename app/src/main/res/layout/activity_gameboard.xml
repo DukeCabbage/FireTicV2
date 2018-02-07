@@ -11,13 +11,11 @@
         android:background="@color/colorGrey400"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         
-        <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
-            android:id="@+id/testSector"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            app:horizontalOrder="center"
-            app:verticalOrder="center"/>
+        <com.cabbage.fireticv2.presentation.components.gameboard.Gameboard
+            android:id="@+id/gameboard"
+            android:layout_width="332dp"
+            android:layout_height="332dp"
+            android:layout_gravity="center"/>
         
         <include layout="@layout/include_player_status"/>
     </FrameLayout>

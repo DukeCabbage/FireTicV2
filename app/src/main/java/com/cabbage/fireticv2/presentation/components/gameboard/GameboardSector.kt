@@ -11,8 +11,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import butterknife.BindViews
 import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
+import com.cabbage.fireticv2.presentation.utils.ElevationSetter
 import kotlinx.android.synthetic.main.gameboard_sector.view.*
-import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class GameboardSector(context: Context, attributeSet: AttributeSet?)
@@ -28,37 +28,29 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
     private val colorPlayer2 = resources.getColor(R.color.player2)
     private val defaultElevation = resources.getDimension(R.dimen.sector_default_elevation)
 
-    @Suppress("ProtectedInFinal")
-    @BindViews(R.id.btn_0, R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7, R.id.btn_8)
-    protected lateinit var gridList: List<@JvmSuppressWildcards View>
-
-    var isActive: Boolean = false
-        set(value) {
-            this.toggleActiveMode(value)
-            field = value
-        }
-
-
-    private var mCallback: Callback? = null
     private val horizontalOrder: Order.HorizontalOrder
     private val verticalOrder: Order.VerticalOrder
+    val sectorIndex get() = Order.orderToIndex(verticalOrder, horizontalOrder)
 
-    private val sectorIndex get() = Order.orderToIndex(verticalOrder, horizontalOrder)
+    @Suppress("ProtectedInFinal")
+    @BindViews(
+            R.id.btn_0,
+            R.id.btn_1,
+            R.id.btn_2,
+            R.id.btn_3,
+            R.id.btn_4,
+            R.id.btn_5,
+            R.id.btn_6,
+            R.id.btn_7,
+            R.id.btn_8
+    )
+    protected lateinit var gridViews: List<@JvmSuppressWildcards View>
 
-    private val gridOnClickListener = OnClickListener { view ->
-        val viewTag = view.tag.toString()
-        Timber.v("Child on click: %s", viewTag)
-
-        val gridIndex = Integer.valueOf(viewTag)
-        val moveMadeBy = mCallback?.onUserClick(this.sectorIndex, gridIndex)
-        this.isActive = false
-    }
-
+    //region View
     init {
-        val typedArray: TypedArray = context.theme
-                .obtainStyledAttributes(attributeSet,
-                        R.styleable.GameboardSector,
-                        0, 0)
+        val typedArray: TypedArray = context.theme.obtainStyledAttributes(attributeSet,
+                R.styleable.GameboardSector,
+                0, 0)
 
         try {
             val ordinalH = typedArray.getInt(R.styleable.GameboardSector_horizontalOrder, Order.HorizontalOrder.CENTER.ordinal)
@@ -76,7 +68,7 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
     override fun onFinishInflate() {
         super.onFinishInflate()
         ButterKnife.bind(this, this)
-        this.gridList.forEach { grid -> grid.setOnClickListener(gridOnClickListener) }
+        gridViews.forEach { it.setOnClickListener(gridOnClickListener) }
     }
 
     /**
@@ -84,32 +76,86 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
      * otherwise, individual grids will handle the events
      */
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        return !this.isActive || super.onInterceptTouchEvent(ev)
+        val intercept = !isActive  // Whole sector as the target of touch events
+        return intercept || super.onInterceptTouchEvent(ev)
     }
 
-    fun setCallback(callback: Callback) {
-        this.mCallback = callback
+    //endregion
+
+    private val gridOnClickListener = OnClickListener { view ->
+        val gridIndex = Integer.valueOf(view.tag.toString())
+//        Timber.v("Child on click: $gridIndex")
+        callback?.onUserClick(sectorIndex, gridIndex, data)
     }
 
-    fun moveMade(gridIndex: Int, byPlayer: Int): Boolean {
-        when (byPlayer) {
-            Player.One.token -> this.gridList[gridIndex].setBackgroundColor(colorPlayer1)
-            Player.Two.token -> this.gridList[gridIndex].setBackgroundColor(colorPlayer2)
-            Player.Open.token -> this.gridList[gridIndex].setBackgroundColor(colorWhiteSmoke)
-            else -> return false
+    //region Properties
+    var callback: Callback? = null
+
+    var isActive: Boolean = false
+        set(value) {
+            toggleActiveMode(value)
+            field = value
         }
 
-        return true
+    var winner = Player.Open.token
+        set(value) {
+            setBorderColorBy(value)
+            field = value
+        }
+
+    private val data = MutableList(9, init = { _ -> Player.Open.token })
+
+    /**
+     * Set ownership of grid for all grids, or at specified index
+     *
+     * @throws IllegalArgumentException, size of the list is not 9
+     */
+    fun setData(newData: List<Int>, changeIndex: Int? = null) {
+        if (newData.size != 9) throw IllegalArgumentException("Expects list of size of 9!")
+
+        if (changeIndex == null) {
+            // Update every grid if applicable
+            for ((index, value) in newData.withIndex()) {
+
+                val oldValue = data[index]
+                if (oldValue != value) {
+                    setGridColorBy(value, index)
+                    data[index] = value
+                }
+            }
+        } else {
+            val value = newData[changeIndex]
+            val oldValue = data[changeIndex]
+            if (oldValue != value) {
+                setGridColorBy(value, changeIndex)
+                data[changeIndex] = value
+            }
+        }
+
+        winner = Konst.checkWin(data)
     }
 
-    fun setLocalWinner(player: Int) {
-        when (player) {
-            Player.One.token -> this.sectorTableLayout.setBackgroundColor(colorPlayer1)
-            Player.Two.token -> this.sectorTableLayout.setBackgroundColor(colorPlayer2)
-            else -> this.sectorTableLayout.setBackgroundColor(colorDivider)
+    //endregion
+
+    //region visual update
+
+    private fun setGridColorBy(playerToken: Int, gridIndex: Int) {
+        when (playerToken) {
+            Player.One.token -> gridViews[gridIndex].setBackgroundColor(colorPlayer1)
+            Player.Two.token -> gridViews[gridIndex].setBackgroundColor(colorPlayer2)
+            else -> gridViews[gridIndex].setBackgroundColor(colorWhiteSmoke)
         }
     }
 
+    private fun setBorderColorBy(playerToken: Int) {
+        when (playerToken) {
+            Player.One.token -> sectorTableLayout.setBackgroundColor(colorPlayer1)
+            Player.Two.token -> sectorTableLayout.setBackgroundColor(colorPlayer2)
+            else -> sectorTableLayout.setBackgroundColor(colorDivider)
+        }
+    }
+
+    // Animate size and elevation
     private fun toggleActiveMode(isEnlarging: Boolean) {
         if (this.isActive == isEnlarging) return
 
@@ -143,7 +189,9 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
                 .start()
     }
 
+    //endregion
+
     interface Callback {
-        fun onUserClick(sectorIndex: Int, gridIndex: Int): Int
+        fun onUserClick(sectorIndex: Int, gridIndex: Int, currentData: List<Int>)
     }
 }

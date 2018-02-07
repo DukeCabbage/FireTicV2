@@ -1,6 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="RtlHardcoded"
+    tools:layout_gravity="center"
+    tools:layout_height="332dp"
+    tools:layout_width="332dp"
+    tools:parentTag="android.widget.FrameLayout">
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_0"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="left|top"
+        android:tag="0"
+        app:horizontalOrder="left"
+        app:verticalOrder="top"
+        tools:ignore="RtlHardcoded"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal|top"
+        app:horizontalOrder="center"
+        app:verticalOrder="top"
+        tools:ignore="RtlHardcoded"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="right|top"
+        app:horizontalOrder="right"
+        app:verticalOrder="top"
+        tools:ignore="RtlHardcoded"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="left|center_vertical"
+        app:horizontalOrder="left"
+        app:verticalOrder="center"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_4"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        app:horizontalOrder="center"
+        app:verticalOrder="center"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_5"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="right|center_vertical"
+        app:horizontalOrder="right"
+        app:verticalOrder="center"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_6"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="left|bottom"
+        app:horizontalOrder="left"
+        app:verticalOrder="bottom"
+        tools:ignore="RtlHardcoded"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_7"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal|bottom"
+        app:horizontalOrder="center"
+        app:verticalOrder="bottom"
+        tools:ignore="RtlHardcoded"/>
+    
+    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+        android:id="@+id/sector_8"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="right|bottom"
+        app:horizontalOrder="right"
+        app:verticalOrder="bottom"
+        tools:ignore="RtlHardcoded"/>
 
 </merge>
