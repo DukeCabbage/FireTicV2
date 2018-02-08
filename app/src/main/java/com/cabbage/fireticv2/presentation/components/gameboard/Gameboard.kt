@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import butterknife.BindViews
 import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
+import timber.log.Timber
 
 class Gameboard(context: Context, attributeSet: AttributeSet?)
     : FrameLayout(context, attributeSet) {
@@ -42,6 +43,9 @@ class Gameboard(context: Context, attributeSet: AttributeSet?)
     private val sectorOnClickListener = OnClickListener { view ->
         (view as GameboardSector).let { sector ->
             val sectorIndex = sector.sectorIndex
+            Timber.v("Sector on click: $sectorIndex")
+
+            if (sector.isActive) return@OnClickListener
 
             if (currentActive != null) {
                 sectorViews[currentActive!!].isActive = false
@@ -54,5 +58,18 @@ class Gameboard(context: Context, attributeSet: AttributeSet?)
 
     fun setCallback(callback: GameboardSector.Callback) {
         for (sector in sectorViews) sector.callback = callback
+    }
+
+    fun setSectorData(sectorIndex: Int, gridIndex: Int? = null, data: List<Int>) {
+        if (gridIndex != null) {
+            if (currentActive != gridIndex) {
+                sectorViews[currentActive!!].isActive = false
+            }
+
+            sectorViews[gridIndex].isActive = true
+            currentActive = gridIndex
+        }
+
+        sectorViews[sectorIndex].setData(data, changeIndex = gridIndex)
     }
 }

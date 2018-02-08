@@ -13,19 +13,26 @@ import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.presentation.utils.ElevationSetter
 import kotlinx.android.synthetic.main.gameboard_sector.view.*
+import timber.log.Timber
 import java.lang.ref.WeakReference
 
 class GameboardSector(context: Context, attributeSet: AttributeSet?)
     : CardView(context, attributeSet) {
 
     companion object {
-        private const val ZOOM_FACTOR = 3.0f
+        private const val ZOOM_FACTOR = 2.2f
     }
 
     private val colorWhiteSmoke = resources.getColor(R.color.colorGrey100)
     private val colorDivider = resources.getColor(R.color.divider)
+    private val colorSecondary = resources.getColor(R.color.colorSecondary)
+
     private val colorPlayer1 = resources.getColor(R.color.player1)
+    private val colorPlayer1Dark = resources.getColor(R.color.player1Dark)
+
     private val colorPlayer2 = resources.getColor(R.color.player2)
+    private val colorPlayer2Dark = resources.getColor(R.color.player2Dark)
+
     private val defaultElevation = resources.getDimension(R.dimen.sector_default_elevation)
 
     private val horizontalOrder: Order.HorizontalOrder
@@ -49,8 +56,8 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
     //region View
     init {
         val typedArray: TypedArray = context.theme.obtainStyledAttributes(attributeSet,
-                R.styleable.GameboardSector,
-                0, 0)
+                                                                          R.styleable.GameboardSector,
+                                                                          0, 0)
 
         try {
             val ordinalH = typedArray.getInt(R.styleable.GameboardSector_horizontalOrder, Order.HorizontalOrder.CENTER.ordinal)
@@ -84,7 +91,7 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
 
     private val gridOnClickListener = OnClickListener { view ->
         val gridIndex = Integer.valueOf(view.tag.toString())
-//        Timber.v("Child on click: $gridIndex")
+        //        Timber.v("Child on click: $gridIndex")
         callback?.onUserClick(sectorIndex, gridIndex, data)
     }
 
@@ -113,6 +120,7 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
     fun setData(newData: List<Int>, changeIndex: Int? = null) {
         if (newData.size != 9) throw IllegalArgumentException("Expects list of size of 9!")
 
+        Timber.v("$newData, $changeIndex")
         if (changeIndex == null) {
             // Update every grid if applicable
             for ((index, value) in newData.withIndex()) {
@@ -149,9 +157,9 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
 
     private fun setBorderColorBy(playerToken: Int) {
         when (playerToken) {
-            Player.One.token -> sectorTableLayout.setBackgroundColor(colorPlayer1)
-            Player.Two.token -> sectorTableLayout.setBackgroundColor(colorPlayer2)
-            else -> sectorTableLayout.setBackgroundColor(colorDivider)
+            Player.One.token -> this.setCardBackgroundColor(colorPlayer1Dark)
+            Player.Two.token -> this.setCardBackgroundColor(colorPlayer2Dark)
+            else -> this.setCardBackgroundColor(colorSecondary)
         }
     }
 
@@ -164,14 +172,14 @@ class GameboardSector(context: Context, attributeSet: AttributeSet?)
         val width = this.width
         val height = this.height
         when (horizontalOrder) {
-            Order.HorizontalOrder.LEFT -> this.pivotX = (width * 0.1).toInt().toFloat()
-            Order.HorizontalOrder.RIGHT -> this.pivotX = (width * 0.9).toInt().toFloat()
+            Order.HorizontalOrder.LEFT -> this.pivotX = (width * 0.2).toInt().toFloat()
+            Order.HorizontalOrder.RIGHT -> this.pivotX = (width * 0.8).toInt().toFloat()
             else -> this.pivotX = (width / 2).toFloat()
         }
 
         when (verticalOrder) {
-            Order.VerticalOrder.TOP -> this.pivotY = (height * 0.1).toInt().toFloat()
-            Order.VerticalOrder.BOTTOM -> this.pivotY = (height * 0.9).toInt().toFloat()
+            Order.VerticalOrder.TOP -> this.pivotY = (height * 0.2).toInt().toFloat()
+            Order.VerticalOrder.BOTTOM -> this.pivotY = (height * 0.8).toInt().toFloat()
             else -> this.pivotY = (height / 2).toFloat()
         }
 

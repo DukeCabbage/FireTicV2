@@ -4,22 +4,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorGrey400"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        
+
         <com.cabbage.fireticv2.presentation.components.gameboard.Gameboard
             android:id="@+id/gameboard"
-            android:layout_width="332dp"
-            android:layout_height="332dp"
-            android:layout_gravity="center"/>
-        
+            android:layout_width="380dp"
+            android:layout_height="380dp"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="24dp"/>
+
         <include layout="@layout/include_player_status"/>
     </FrameLayout>
-    
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabTest"
         android:layout_width="wrap_content"
@@ -30,7 +33,7 @@
         android:tint="#FFFFFF"
         app:backgroundTint="@color/colorSecondary"
         app:elevation="4dp"/>
-    
+
     <include
         layout="@layout/include_appbar_basic"
         android:visibility="visible"/>

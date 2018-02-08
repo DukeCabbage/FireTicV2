@@ -21,20 +21,6 @@ class GameboardActivity : AppCompatActivity(),
     private var currentPlayer = Player.One
     private var windowWidth: Int? = null
 
-    //    override fun onUserClick(sectorIndex: Int, gridIndex: Int): Int {
-//        Toast.makeText(this, "$sectorIndex, $gridIndex", Toast.LENGTH_SHORT).show()
-//
-//        val currentPlayerToken = currentPlayer.token
-//        testSector.moveMade(gridIndex, currentPlayerToken)
-////        testSector.setLocalWinner(currentPlayerToken)
-//
-//        val nextPlayer = currentPlayer.toggle()
-//        togglePlayerStatusBar(nextPlayer)
-//        currentPlayer = nextPlayer
-//
-//        return currentPlayerToken
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gameboard)
@@ -57,6 +43,18 @@ class GameboardActivity : AppCompatActivity(),
 
     override fun onUserClick(sectorIndex: Int, gridIndex: Int, currentData: List<Int>) {
         Toast.makeText(this, "$sectorIndex $gridIndex", Toast.LENGTH_SHORT).show()
+
+        if (currentData[gridIndex] != Player.Open.token) {
+            Timber.w("Already occupied")
+            return
+        }
+
+        currentData.toMutableList().let { data ->
+            data[gridIndex] = currentPlayer.token
+            gameboard.setSectorData(sectorIndex, gridIndex, data)
+        }
+
+        togglePlayerStatusBar(currentPlayer.toggle())
     }
 
     private fun setUpActionBar() {

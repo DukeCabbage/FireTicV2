@@ -32,7 +32,7 @@
             android:visibility="visible">
 
             <com.cabbage.fireticv2.presentation.components.misc.DashboardButton
-                style="@style/DashboardButton"
+                style="@style/dashboard_button"
                 android:id="@+id/btn_menu_solo"
                 android:layout_column="0"
                 android:layout_row="0"
@@ -40,7 +40,7 @@
                 app:label="@string/menu_solo"/>
 
             <com.cabbage.fireticv2.presentation.components.misc.DashboardButton
-                style="@style/DashboardButton"
+                style="@style/dashboard_button"
                 android:id="@+id/btn_menu_online"
                 android:layout_column="2"
                 android:layout_row="0"
@@ -48,7 +48,7 @@
                 app:label="@string/menu_online"/>
 
             <com.cabbage.fireticv2.presentation.components.misc.DashboardButton
-                style="@style/DashboardButton"
+                style="@style/dashboard_button"
                 android:id="@+id/btn_menu_statistics"
                 android:layout_column="0"
                 android:layout_row="2"
@@ -56,7 +56,7 @@
                 app:label="@string/menu_statistics"/>
 
             <com.cabbage.fireticv2.presentation.components.misc.DashboardButton
-                style="@style/DashboardButton"
+                style="@style/dashboard_button"
                 android:id="@+id/btn_menu_about"
                 android:layout_column="2"
                 android:layout_row="2"
