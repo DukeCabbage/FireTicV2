@@ -1,4 +1,4 @@
-package com.cabbage.fireticv2.presentation.components.gameboard
+package com.cabbage.fireticv2.presentation.gameboard
 
 object Order {
 

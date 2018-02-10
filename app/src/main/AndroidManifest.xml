@@ -21,7 +21,7 @@
         </activity>
         
         <activity
-            android:name=".presentation.GameboardActivity"
+            android:name=".presentation.gameboard.GameboardActivity"
             android:parentActivityName=".presentation.home.MainActivity"
             android:screenOrientation="portrait">
         

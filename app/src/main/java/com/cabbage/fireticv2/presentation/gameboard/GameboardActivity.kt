@@ -1,4 +1,4 @@
-package com.cabbage.fireticv2.presentation
+package com.cabbage.fireticv2.presentation.gameboard
 
 import android.graphics.Point
 import android.os.Bundle
@@ -7,8 +7,6 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
-import com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
-import com.cabbage.fireticv2.presentation.components.gameboard.Player
 import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import kotlinx.android.synthetic.main.activity_gameboard.*
 import kotlinx.android.synthetic.main.include_appbar_collapsing.*
@@ -16,9 +14,9 @@ import kotlinx.android.synthetic.main.include_player_status.*
 import timber.log.Timber
 
 class GameboardActivity : AppCompatActivity(),
-                          GameboardSector.Callback {
+                          Gameboard.Delegate {
 
-    private var currentPlayer = Player.One
+    private var currentPlayer = Player1Token    // The player with whom the next move will be made
     private var windowWidth: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +25,12 @@ class GameboardActivity : AppCompatActivity(),
         ButterKnife.bind(this)
         setUpActionBar()
 
-        gameboard.setCallback(this)
-        fabTest.setOnClickListener { togglePlayerStatusBar(currentPlayer.toggle()) }
+        gameboard.delegate = this
+        // Dev
+        fabTest.setOnClickListener {
+            currentPlayer = -currentPlayer
+            this.togglePlayerStatusBar()
+        }
     }
 
     override fun onStart() {
@@ -39,22 +41,6 @@ class GameboardActivity : AppCompatActivity(),
 
         val lp = barContainer.layoutParams as FrameLayout.LayoutParams
         lp.setMargins(-size.x / 2, lp.topMargin, -size.x / 2, lp.bottomMargin)
-    }
-
-    override fun onUserClick(sectorIndex: Int, gridIndex: Int, currentData: List<Int>) {
-        Toast.makeText(this, "$sectorIndex $gridIndex", Toast.LENGTH_SHORT).show()
-
-        if (currentData[gridIndex] != Player.Open.token) {
-            Timber.w("Already occupied")
-            return
-        }
-
-        currentData.toMutableList().let { data ->
-            data[gridIndex] = currentPlayer.token
-            gameboard.setSectorData(sectorIndex, gridIndex, data)
-        }
-
-        togglePlayerStatusBar(currentPlayer.toggle())
     }
 
     private fun setUpActionBar() {
@@ -73,8 +59,9 @@ class GameboardActivity : AppCompatActivity(),
         }
     }
 
-    private fun togglePlayerStatusBar(nextPlayer: Player, isWinner: Boolean = false) {
-        Timber.d("toggleUserIndicator %d", nextPlayer.token)
+    // Shift the player bar left and right according to who's turn it is to play
+    private fun togglePlayerStatusBar(isWinner: Boolean = false) {
+        Timber.d("toggleUserIndicator %d", currentPlayer)
         windowWidth?.let { width ->
             val animator = barContainer.animate()
             animator.duration = 667L
@@ -82,16 +69,38 @@ class GameboardActivity : AppCompatActivity(),
                 0.6f * width
             else 0.3f * width
 
-            when (nextPlayer) {
-                Player.One -> animator.translationX(shiftAmount)
-                Player.Two -> animator.translationX(-shiftAmount)
+            when (currentPlayer) {
+                Player1Token -> animator.translationX(shiftAmount)
+                Player2Token -> animator.translationX(-shiftAmount)
                 else -> {
                     animator.translationX(0f)
                     animator.duration = 0L
                 }
             }
         }
+    }
 
-        currentPlayer = nextPlayer
+    override fun makeMove(gameboard: Gameboard, move: Pair<Int, Int>)
+            : Triple<Int, Int, Long>? {
+        // TODO: check if it's player's turn
+        val previousPlayer = currentPlayer
+        currentPlayer = -currentPlayer
+        this.togglePlayerStatusBar()
+
+        // TODO: transmit this move to some kind of repository
+
+        return Triple(move.first, move.second, previousPlayer)
+    }
+
+    override fun isGameOver(gameboard: Gameboard): Boolean {
+        val winner = checkWin(gameboard.sectorOwners)
+        if (winner == OpenGrid) {
+            return false
+        } else {
+            currentPlayer = winner
+            togglePlayerStatusBar(isWinner = true)
+            Toast.makeText(this, "Game over!", Toast.LENGTH_LONG).show()
+            return true
+        }
     }
 }

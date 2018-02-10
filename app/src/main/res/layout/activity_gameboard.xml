@@ -11,7 +11,7 @@
         android:background="@color/colorGrey400"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.cabbage.fireticv2.presentation.components.gameboard.Gameboard
+        <com.cabbage.fireticv2.presentation.gameboard.Gameboard
             android:id="@+id/gameboard"
             android:layout_width="380dp"
             android:layout_height="380dp"

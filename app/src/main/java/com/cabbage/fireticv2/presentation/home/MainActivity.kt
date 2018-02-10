@@ -12,7 +12,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.presentation.utils.ViewUtil
-import com.cabbage.fireticv2.presentation.GameboardActivity
+import com.cabbage.fireticv2.presentation.gameboard.GameboardActivity
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.include_appbar_collapsing.*

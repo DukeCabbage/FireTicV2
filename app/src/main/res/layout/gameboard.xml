@@ -9,7 +9,7 @@
     tools:layout_width="332dp"
     tools:parentTag="android.widget.FrameLayout">
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_0"
         android:layout_gravity="left|top"
@@ -18,7 +18,7 @@
         app:verticalOrder="top"
         tools:ignore="RtlHardcoded"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_1"
         android:layout_gravity="center_horizontal|top"
@@ -26,7 +26,7 @@
         app:verticalOrder="top"
         tools:ignore="RtlHardcoded"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_2"
         android:layout_gravity="right|top"
@@ -34,28 +34,28 @@
         app:verticalOrder="top"
         tools:ignore="RtlHardcoded"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_3"
         android:layout_gravity="left|center_vertical"
         app:horizontalOrder="left"
         app:verticalOrder="center"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_4"
         android:layout_gravity="center"
         app:horizontalOrder="center"
         app:verticalOrder="center"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_5"
         android:layout_gravity="right|center_vertical"
         app:horizontalOrder="right"
         app:verticalOrder="center"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_6"
         android:layout_gravity="left|bottom"
@@ -63,7 +63,7 @@
         app:verticalOrder="bottom"
         tools:ignore="RtlHardcoded"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_7"
         android:layout_gravity="center_horizontal|bottom"
@@ -71,7 +71,7 @@
         app:verticalOrder="bottom"
         tools:ignore="RtlHardcoded"/>
 
-    <com.cabbage.fireticv2.presentation.components.gameboard.GameboardSector
+    <com.cabbage.fireticv2.presentation.gameboard.GameboardSector
         style="@style/board_sector"
         android:id="@+id/sector_8"
         android:layout_gravity="right|bottom"
