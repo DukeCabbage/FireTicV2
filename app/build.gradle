@@ -109,6 +109,7 @@ dependencies {
 
     // Firebase
     implementation "com.google.firebase:firebase-auth:$firebase_version"
+    implementation "com.google.firebase:firebase-firestore:$firebase_version"
 
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$arch_comp_version"

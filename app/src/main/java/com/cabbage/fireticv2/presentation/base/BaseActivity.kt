@@ -2,11 +2,13 @@ package com.cabbage.fireticv2.presentation.base
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import com.cabbage.fireticv2.MyApplication
 import com.cabbage.fireticv2.injection.ActivityComponent
 import com.cabbage.fireticv2.injection.ActivityModule
 import com.cabbage.fireticv2.injection.ConfigPersistentComponent
 import com.cabbage.fireticv2.injection.DaggerConfigPersistentComponent
+import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicLong
 
@@ -37,6 +39,22 @@ abstract class BaseActivity : AppCompatActivity() {
                 ComponentMap.put(it, configPersistentComponent)
             }
             activityComponent = configPersistentComponent.activityComponent(ActivityModule(this))
+        }
+    }
+
+    protected fun setUpActionBar(toolbar: Toolbar) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        // Compensate for translucent status bar
+        ViewUtil.getStatusBarHeight(this)?.let { statusBarHeight ->
+            toolbar.setPadding(
+                    toolbar.paddingLeft,
+                    toolbar.paddingTop + statusBarHeight,
+                    toolbar.paddingRight,
+                    toolbar.paddingBottom)
+
+            toolbar.layoutParams.height += statusBarHeight
         }
     }
 

@@ -9,7 +9,7 @@ import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import kotlinx.android.synthetic.main.activity_gameboard.*
-import kotlinx.android.synthetic.main.include_appbar_collapsing.*
+import kotlinx.android.synthetic.main.include_appbar_basic.*
 import kotlinx.android.synthetic.main.include_player_status.*
 import timber.log.Timber
 
@@ -48,7 +48,7 @@ class GameboardActivity : AppCompatActivity(),
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Compensate for translucent status bar
-        ViewUtil.getStatusBarHeight(this).let { statusBarHeight ->
+        ViewUtil.getStatusBarHeight(this)?.let { statusBarHeight ->
             toolbar.setPadding(
                     toolbar.paddingLeft,
                     toolbar.paddingTop + statusBarHeight,

@@ -26,6 +26,13 @@
             android:screenOrientation="portrait">
         
         </activity>
+
+        <activity
+            android:name=".presentation.stats.StatsActivity"
+            android:parentActivityName=".presentation.home.MainActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>
