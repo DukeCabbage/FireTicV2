@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.cabbage.fireticv2.data.FireTicRepository
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
@@ -35,5 +36,10 @@ class AppModule(private val appContext: Context) {
     fun providesRxPermission(@Named("appContext") context: Context): RxSharedPreferences {
         val sharedPreferences = context.getSharedPreferences("default", MODE_PRIVATE)
         return RxSharedPreferences.create(sharedPreferences)
+    }
+
+    @ApplicationScope @Provides
+    fun providesFireTicRepository(): FireTicRepository {
+        return FireTicRepository()
     }
 }

@@ -1,7 +1,10 @@
 package com.cabbage.fireticv2.presentation.stats
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import butterknife.ButterKnife
+import com.cabbage.fireticv2.MyApplication
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.presentation.base.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +18,17 @@ class StatsActivity : BaseActivity() {
         setContentView(R.layout.activity_stats)
         ButterKnife.bind(this)
         setUpActionBar(toolbar)
+
+        val repo = MyApplication.appComponent.fireTicRepository()
+        val factory = FunViewModelProvider(repo)
+        val viewModel = ViewModelProviders.of(this, factory).get(FunViewModel::class.java)
+
+        viewModel.getData().observe(this, Observer<Int> {
+            tvTest.text = "$it"
+        })
+
+        btnRaised.setOnClickListener { viewModel.plus() }
+        btnFlat.setOnClickListener { viewModel.minus() }
     }
 
     override fun onStart() {

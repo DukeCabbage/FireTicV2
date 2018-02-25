@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
@@ -19,7 +19,60 @@
             android:minLines="2"
             android:scrollbars="vertical"
             android:textSize="20sp"/>
-    </FrameLayout>
+
+        <Button
+            android:id="@+id/btnRaised"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvFirebaseUser"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorSecondary"
+            android:fontFamily="sans-serif-medium"
+            android:text="Test"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"/>
+
+        <Button
+            style="?attr/borderlessButtonStyle"
+            android:id="@+id/btnFlat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvFirebaseUser"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@id/btnRaised"
+            android:fontFamily="sans-serif-medium"
+            android:text="Test"
+            android:textColor="@color/colorSecondary"
+            android:textSize="14sp"/>
+
+        <FrameLayout
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_below="@id/tvFirebaseUser"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_toEndOf="@id/btnFlat"
+            android:background="@color/colorGrey400">
+
+            <View
+                android:layout_width="64dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:background="@color/colorSecondary"/>
+
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/tvTest"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnRaised"
+            android:layout_marginTop="8dp"
+            android:minHeight="48dp"/>
+
+    </RelativeLayout>
 
     <include layout="@layout/include_appbar_basic"/>
 
