@@ -4,25 +4,19 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'project-report'
 
-android {
-    def versionMajor = 0
-    def versionMinor = 0
-    def versionPatch = 4
-    def buildNumber = 0
+apply from: "version.gradle"
 
-    def versionCodeBase = ((versionMajor * 100 + versionMinor) * 100 + versionPatch) * 100 + buildNumber
-    def debugVersionNameSuffix = "debug_${Character.toChars(97 + buildNumber)}"
-    println "Version code : $versionCodeBase"
-    println "Version name suffix: ${Character.toChars(97 + buildNumber)}"
-    println ""
+android {
+    def versionProps = getVersionProps()
+    def versionNameDebugSuffix = getAppVersionNameDebugSuffix(versionProps)
 
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.cabbage.fireticv2"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode versionCodeBase
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionCode getAppVersionCode(versionProps)
+        versionName getAppVersionName(versionProps)
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -55,7 +49,7 @@ android {
     buildTypes {
         debug {
             debuggable true
-            versionNameSuffix debugVersionNameSuffix
+            versionNameSuffix versionNameDebugSuffix
 
             if (localKeyStore) signingConfig signingConfigs.debug
         }
