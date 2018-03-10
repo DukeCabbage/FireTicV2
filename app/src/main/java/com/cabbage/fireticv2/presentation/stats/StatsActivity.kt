@@ -1,17 +1,30 @@
 package com.cabbage.fireticv2.presentation.stats
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import butterknife.ButterKnife
-import com.cabbage.fireticv2.MyApplication
 import com.cabbage.fireticv2.R
+import com.cabbage.fireticv2.data.user.ModelUser
 import com.cabbage.fireticv2.presentation.base.BaseActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_stats.*
 import kotlinx.android.synthetic.main.include_appbar_basic.*
+import javax.inject.Inject
 
 class StatsActivity : BaseActivity() {
+
+    @Inject lateinit var mViewModel: UserAccountViewModel
+
+    private var d1: FirebaseUser? = null
+        set(value) {
+            field = value
+            refresh()
+        }
+    private var d2: ModelUser? = null
+        set(value) {
+            field = value
+            refresh()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,31 +32,28 @@ class StatsActivity : BaseActivity() {
         ButterKnife.bind(this)
         setUpActionBar(toolbar)
 
-        val repo = MyApplication.appComponent.fireTicRepository()
-        val factory = FunViewModelProvider(repo)
-        val viewModel = ViewModelProviders.of(this, factory).get(FunViewModel::class.java)
+        activityComponent.inject(this)
 
-        viewModel.getData().observe(this, Observer<Int> {
-            tvTest.text = "$it"
+        mViewModel.firebaseUser().observe(this, Observer {
+            d1 = it
         })
 
-        btnRaised.setOnClickListener { viewModel.plus() }
-        btnFlat.setOnClickListener { viewModel.minus() }
+        mViewModel.signedInUser().observe(this, Observer {
+            d2 = it
+        })
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun refresh() {
+        if (d1 == null || d2 == null) return
 
-        FirebaseAuth.getInstance().currentUser?.let {
-            var str = "UID: ${it.uid}\n"
-            str += "Name: ${it.displayName}\n"
-            str += "Anonymous: ${it.isAnonymous}\n"
+        var str = "UID: ${d1?.uid}\n"
+        str += "Name: ${d2?.name}\n"
+        str += "Anonymous: ${d1?.isAnonymous}\n"
 
-            for (provider in it.providerData) {
-                str += "Provider: ${provider.providerId}\n"
-            }
-
-            tvFirebaseUser.text = str
+        for (provider in d1?.providerData ?: emptyList()) {
+            str += "Provider: ${provider.providerId}\n"
         }
+
+        tvFirebaseUser.text = str
     }
 }

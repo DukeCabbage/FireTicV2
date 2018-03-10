@@ -2,28 +2,26 @@ package com.cabbage.fireticv2.data
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import com.cabbage.fireticv2.data.user.UserRepository
+import com.cabbage.fireticv2.dagger.ApplicationScope
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import javax.inject.Inject
 
-class FireTicRepository {
+@ApplicationScope
+class FireTicRepository
+@Inject constructor(@ApplicationScope val auth: FirebaseAuth,
+                    @ApplicationScope private val firestore: FirebaseFirestore,
+                    @ApplicationScope val userRepository: UserRepository) {
 
-    private val data = MutableLiveData<Int>()
+    private val firebaseUser = MutableLiveData<FirebaseUser>()
 
-    private var initialized = false
-
-    fun getGameData(): LiveData<Int> {
-        if (!initialized) {
-            initialized = true
-            data.value = 0
-        }
-        return data
+    init {
+        firebaseUser.observeForever { userRepository.userAuthorized(it) }
+        auth.addAuthStateListener { firebaseUser.postValue(it.currentUser) }
     }
 
-    fun increase() {
-        data.value = if (data.value == null) 0
-        else data.value!! + 1
-    }
+    fun getFirebaseUser(): LiveData<FirebaseUser> = firebaseUser
 
-    fun decrease() {
-        data.value = if (data.value == null) 0
-        else data.value!! - 1
-    }
 }

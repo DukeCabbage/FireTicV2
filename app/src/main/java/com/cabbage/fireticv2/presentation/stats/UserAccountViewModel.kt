@@ -1,10 +1,10 @@
-package com.cabbage.fireticv2.presentation.home
+package com.cabbage.fireticv2.presentation.stats
 
 import android.arch.lifecycle.ViewModel
 import com.cabbage.fireticv2.data.FireTicRepository
 import timber.log.Timber
 
-class MainViewModel(private val repository: FireTicRepository) : ViewModel() {
+class UserAccountViewModel(private val repository: FireTicRepository) : ViewModel() {
 
     init {
         Timber.v("Init")
@@ -12,7 +12,5 @@ class MainViewModel(private val repository: FireTicRepository) : ViewModel() {
 
     fun firebaseUser() = repository.getFirebaseUser()
 
-    fun signOut() {
-        Timber.w("Todo")
-    }
+    fun signedInUser() = repository.userRepository.getSignedInUser()
 }

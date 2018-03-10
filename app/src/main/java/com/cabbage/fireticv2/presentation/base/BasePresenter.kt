@@ -1,5 +1,6 @@
 package com.cabbage.fireticv2.presentation.base
 
+import android.support.annotation.CallSuper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
@@ -8,25 +9,23 @@ import timber.log.Timber
 abstract class BasePresenter<V : MvpView>
     : MvpPresenter<V> {
 
-    init {
-        Timber.v("init")
-    }
-
     /**
      * Setting view to null will un-subscribe any on-going subscription
      */
-    override final var mvpView: V? = null
+    final override var mvpView: V? = null
         get() {
             if (field == null) Timber.w("No view attached yet")
             return field
         }
 
-    override final fun attachView(v: V) {
+    @CallSuper
+    override fun attachView(v: V) {
         Timber.v("attachView")
         mvpView = v
     }
 
-    override final fun detachView() {
+    @CallSuper
+    override fun detachView() {
         Timber.v("detachView")
         unSubscribeAll()
         mvpView = null

@@ -14,7 +14,7 @@ ext.getVersionProps = {
     if (versionProps["versionMajor"] == null) versionProps["versionMajor"] = "0"
     if (versionProps["versionMinor"] == null) versionProps["versionMinor"] = "0"
     if (versionProps["versionPatch"] == null) versionProps["versionPatch"] = "1"
-    if (versionProps["buildNumber"] == null) versionProps["buildNumber"] = "0"
+    if (versionProps["buildNumber"] == null) versionProps["buildNumber"] = "1"
 
     return versionProps
 }
@@ -30,7 +30,7 @@ ext.getAppVersionName = { props ->
 ext.getAppVersionNameDebugSuffix = { props ->
     def buildNumber = props["buildNumber"].toInteger()
 
-    return "_${Character.toChars(97 + buildNumber)}"
+    return "-${Character.toChars(96 + buildNumber)}"
 }
 
 ext.getAppVersionCode = { props ->

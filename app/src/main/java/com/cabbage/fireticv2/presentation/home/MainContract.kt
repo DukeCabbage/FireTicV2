@@ -3,6 +3,7 @@ package com.cabbage.fireticv2.presentation.home
 import android.content.Context
 import com.cabbage.fireticv2.presentation.base.MvpPresenter
 import com.cabbage.fireticv2.presentation.base.MvpView
+import com.google.firebase.auth.FirebaseUser
 
 interface MainContract {
 
@@ -16,5 +17,7 @@ interface MainContract {
         fun requestVersionInfo(context: Context)
 
         fun signInAnonymously()
+
+        fun checkIfUserExistsInFirestore(user: FirebaseUser)
     }
 }

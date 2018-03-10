@@ -1,4 +1,4 @@
-package com.cabbage.fireticv2.injection
+package com.cabbage.fireticv2.dagger
 
 import javax.inject.Scope
 

@@ -1,19 +1,23 @@
 package com.cabbage.fireticv2.presentation.home
 
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.Observer
 import android.content.Context
+import com.cabbage.fireticv2.data.FireTicRepository
+import com.cabbage.fireticv2.dagger.ConfigPersistent
 import com.cabbage.fireticv2.presentation.base.BasePresenter
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainPresenter constructor() : BasePresenter<MainContract.View>(),
-                                    MainContract.Presenter {
+@ConfigPersistent
+class MainPresenter
+@Inject constructor(private val repository: FireTicRepository)
+    : BasePresenter<MainContract.View>(),
+      MainContract.Presenter {
 
     init {
-        Timber.v("init")
-    }
-
-    constructor(view: MainContract.View) : this() {
-        this.attachView(view)
+        Timber.v("Init")
     }
 
     override fun requestVersionInfo(context: Context) {
@@ -23,15 +27,25 @@ class MainPresenter constructor() : BasePresenter<MainContract.View>(),
     }
 
     override fun signInAnonymously() {
-        FirebaseAuth.getInstance().signInAnonymously()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Timber.i("signInAnonymously success")
-                        mvpView?.toastMessage("signInAnonymously success")
-                    } else {
-                        Timber.e(task.exception)
-                        mvpView?.toastMessage(task.exception?.localizedMessage ?: "signInAnonymously fail")
-                    }
+        repository.auth.signInAnonymously()
+                .addOnSuccessListener {
+                    Timber.i("signInAnonymously success")
+                    mvpView?.toastMessage("signInAnonymously success")
                 }
+                .addOnFailureListener {
+                    Timber.e(it)
+                    mvpView?.toastMessage(it.localizedMessage ?: "signInAnonymously fail")
+                }
+    }
+
+    override fun checkIfUserExistsInFirestore(user: FirebaseUser) {
+        repository.userRepository.getUser(user.uid)
+                .observe(this.mvpView as LifecycleOwner, Observer {
+                    if (it == null) {
+                        repository.userRepository.createUser(user.uid)
+                    } else {
+                        Timber.w(it.name)
+                    }
+                })
     }
 }

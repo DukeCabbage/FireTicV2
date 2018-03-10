@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import com.cabbage.fireticv2.MyApplication
-import com.cabbage.fireticv2.injection.ActivityComponent
-import com.cabbage.fireticv2.injection.ActivityModule
-import com.cabbage.fireticv2.injection.ConfigPersistentComponent
-import com.cabbage.fireticv2.injection.DaggerConfigPersistentComponent
+import com.cabbage.fireticv2.dagger.activity.ActivityComponent
+import com.cabbage.fireticv2.dagger.activity.ActivityModule
+import com.cabbage.fireticv2.dagger.activity.ConfigPersistComponent
+import com.cabbage.fireticv2.dagger.activity.DaggerConfigPersistComponent
 import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicLong
@@ -17,7 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
     companion object {
         private val KEY_ACTIVITY_ID = "ACTIVITY_ID"
         private val NextId = AtomicLong(0)
-        private val ComponentMap: MutableMap<Long, ConfigPersistentComponent> = HashMap()
+        private val ComponentMap: MutableMap<Long, ConfigPersistComponent> = HashMap()
     }
 
     protected lateinit var activityComponent: ActivityComponent
@@ -26,18 +26,19 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create the ActivityComponent and reuses cached ConfigPersistentComponent if this is
+        // Create the ActivityComponent and reuses cached ConfigPersistComponent if this is
         // being called after a configuration change.
         mActivityId = savedInstanceState?.getLong(KEY_ACTIVITY_ID) ?: NextId.getAndIncrement()
         mActivityId!!.let {
             val configPersistentComponent = ComponentMap[it]
-                                            ?: DaggerConfigPersistentComponent.builder()
+                                            ?: DaggerConfigPersistComponent.builder()
                                                     .appComponent(MyApplication.appComponent)
                                                     .build()
 
             if (!ComponentMap.containsKey(it)) {
-                ComponentMap.put(it, configPersistentComponent)
+                ComponentMap[it] = configPersistentComponent
             }
+
             activityComponent = configPersistentComponent.activityComponent(ActivityModule(this))
         }
     }
@@ -66,7 +67,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         if (!isChangingConfigurations) {
-            Timber.i("Clearing ConfigPersistentComponent id=$mActivityId")
+            Timber.i("Clearing ConfigPersistComponent id=$mActivityId")
             ComponentMap.remove(mActivityId)
         }
         super.onDestroy()
