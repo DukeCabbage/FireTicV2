@@ -18,7 +18,7 @@ class UserRepository
     private val users: MutableMap<String, MutableLiveData<ModelUser>> = HashMap()
 
     internal fun userAuthorized(user: FirebaseUser?) {
-        Timber.v("uid: ${user?.uid}")
+        Timber.v("userAuthorized, uid: ${user?.uid}")
 
         if (user == null) {
             users.clear()
@@ -63,5 +63,21 @@ class UserRepository
                     }
                 }
                 .addOnFailureListener { Timber.e(it) }
+    }
+
+    fun updateUserName(uid: String, newName: String) {
+        usersCollection.document(uid)
+                .update("name", newName)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        Timber.v("updateUserName success, uid: $uid, name: $newName")
+
+                        val newModel = users[uid]?.value?.copy(name = newName)
+                        if (newModel != null) users[uid]?.postValue(newModel)
+
+                    } else {
+                        Timber.e(it.exception)
+                    }
+                }
     }
 }

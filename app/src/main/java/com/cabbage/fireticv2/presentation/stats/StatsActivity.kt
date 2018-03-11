@@ -16,15 +16,7 @@ class StatsActivity : BaseActivity() {
     @Inject lateinit var mViewModel: UserAccountViewModel
 
     private var d1: FirebaseUser? = null
-        set(value) {
-            field = value
-            refresh()
-        }
     private var d2: ModelUser? = null
-        set(value) {
-            field = value
-            refresh()
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,24 +28,32 @@ class StatsActivity : BaseActivity() {
 
         mViewModel.firebaseUser().observe(this, Observer {
             d1 = it
+
+            var str = "UID: ${d1?.uid}\n"
+            str += "Name: ${d1?.displayName}\n"
+            str += "Anonymous: ${d1?.isAnonymous}\n"
+
+            for (provider in d1?.providerData ?: emptyList()) {
+                str += "Provider: ${provider.providerId}\n"
+            }
+            tvFirebaseUser.text = str
         })
 
         mViewModel.signedInUser().observe(this, Observer {
             d2 = it
+
+            tvUserName.text = d2?.name
+            etUserName.setText(d2?.name)
+            etUserName.setSelection(d2?.name?.length ?: 0)
         })
-    }
 
-    private fun refresh() {
-        if (d1 == null || d2 == null) return
+        btnRaised.setOnClickListener {
+            val oldName = d2?.name
+            val newName = etUserName.text.toString()
 
-        var str = "UID: ${d1?.uid}\n"
-        str += "Name: ${d2?.name}\n"
-        str += "Anonymous: ${d1?.isAnonymous}\n"
+            if (newName == oldName || newName.isBlank()) return@setOnClickListener
 
-        for (provider in d1?.providerData ?: emptyList()) {
-            str += "Provider: ${provider.providerId}\n"
+            mViewModel.updateUserName(newName)
         }
-
-        tvFirebaseUser.text = str
     }
 }

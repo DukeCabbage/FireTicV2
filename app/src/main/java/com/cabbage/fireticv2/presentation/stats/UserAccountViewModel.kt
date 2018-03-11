@@ -13,4 +13,14 @@ class UserAccountViewModel(private val repository: FireTicRepository) : ViewMode
     fun firebaseUser() = repository.getFirebaseUser()
 
     fun signedInUser() = repository.userRepository.getSignedInUser()
+
+    fun updateUserName(newName: String) {
+
+        val user = signedInUser().value
+        if (user != null) {
+            repository.userRepository.updateUserName(user.userId, newName)
+        } else {
+            Timber.w("No signed in user")
+        }
+    }
 }

@@ -45,6 +45,7 @@ class MainPresenter
                         repository.userRepository.createUser(user.uid)
                     } else {
                         Timber.w(it.name)
+                        mvpView?.toastMessage("signed in as ${it.name}")
                     }
                 })
     }

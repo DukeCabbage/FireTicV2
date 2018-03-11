@@ -62,6 +62,8 @@ class MainActivity : BaseActivity(),
                 else -> mPresenter.checkIfUserExistsInFirestore(firebaseUser)
             }
         })
+
+        mPresenter.signInAnonymously()
     }
 
     private fun configureAppBar() {
@@ -78,7 +80,7 @@ class MainActivity : BaseActivity(),
         }
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-            Timber.d("$verticalOffset, ${appBarLayout.totalScrollRange}")
+//            Timber.d("$verticalOffset, ${appBarLayout.totalScrollRange}")
             if (-verticalOffset > 0.5 * appBarLayout.totalScrollRange) {
                 ViewCompat.setElevation(appBarLayout, ViewUtil.dpToPixel(this, 4))
             } else {
