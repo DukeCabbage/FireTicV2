@@ -47,7 +47,6 @@ class UserRepository
                 .set(model)
                 .addOnSuccessListener { users[uid]?.postValue(model) }
                 .addOnFailureListener { Timber.e(it) }
-
     }
 
     private fun fetchUser(uid: String) {

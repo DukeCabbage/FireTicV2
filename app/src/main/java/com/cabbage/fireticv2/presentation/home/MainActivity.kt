@@ -12,6 +12,7 @@ import butterknife.OnClick
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.presentation.base.BaseActivity
 import com.cabbage.fireticv2.presentation.gameboard.GameboardActivity
+import com.cabbage.fireticv2.presentation.roomlist.RoomListActivity
 import com.cabbage.fireticv2.presentation.stats.StatsActivity
 import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,7 +28,8 @@ class MainActivity : BaseActivity(),
 
     @OnClick(R.id.btn_menu_online)
     fun onClickO(v: View) {
-
+        val intent = Intent(v.context, RoomListActivity::class.java)
+        startActivity(intent)
     }
 
     @OnClick(R.id.btn_menu_about)
@@ -48,6 +50,7 @@ class MainActivity : BaseActivity(),
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Timber.v("onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
@@ -56,6 +59,7 @@ class MainActivity : BaseActivity(),
         configureAppBar()
 
         activityComponent.inject(this)
+
         mViewModel.firebaseUser().observe(this, Observer { firebaseUser ->
             when (firebaseUser) {
                 null -> mPresenter.signInAnonymously()
@@ -63,7 +67,12 @@ class MainActivity : BaseActivity(),
             }
         })
 
-        mPresenter.signInAnonymously()
+//        mPresenter.signInAnonymously()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.v("onDestroy")
     }
 
     private fun configureAppBar() {
@@ -80,12 +89,10 @@ class MainActivity : BaseActivity(),
         }
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
-//            Timber.d("$verticalOffset, ${appBarLayout.totalScrollRange}")
-            if (-verticalOffset > 0.5 * appBarLayout.totalScrollRange) {
-                ViewCompat.setElevation(appBarLayout, ViewUtil.dpToPixel(this, 4))
-            } else {
-                ViewCompat.setElevation(appBarLayout, ViewUtil.dpToPixel(this, 0))
-            }
+            //            Timber.v("$verticalOffset, ${appBarLayout.totalScrollRange}")
+
+            val elevation = if (-verticalOffset > 0.5 * appBarLayout.totalScrollRange) 4 else 0
+            ViewCompat.setElevation(appBarLayout, ViewUtil.dpToPixel(this, elevation))
         }
     }
 

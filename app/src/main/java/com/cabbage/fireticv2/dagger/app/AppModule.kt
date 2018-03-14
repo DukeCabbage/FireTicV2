@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.cabbage.fireticv2.dagger.ApplicationScope
+import com.cabbage.fireticv2.data.FireTicRepository
+import com.cabbage.fireticv2.presentation.base.MyViewModelFactory
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides

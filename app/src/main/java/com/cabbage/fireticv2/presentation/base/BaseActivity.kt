@@ -3,6 +3,7 @@ package com.cabbage.fireticv2.presentation.base
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import com.cabbage.fireticv2.MyApplication
 import com.cabbage.fireticv2.dagger.activity.ActivityComponent
 import com.cabbage.fireticv2.dagger.activity.ActivityModule
@@ -11,6 +12,7 @@ import com.cabbage.fireticv2.dagger.activity.DaggerConfigPersistComponent
 import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicLong
+
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -57,6 +59,17 @@ abstract class BaseActivity : AppCompatActivity() {
 
             toolbar.layoutParams.height += statusBarHeight
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+        // Respond to the action bar's Up/Home button
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

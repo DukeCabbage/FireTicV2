@@ -5,7 +5,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ListenerRegistration
 import timber.log.Timber
 
-class UserLiveData : MutableLiveData<ModelUser?>() {
+@Deprecated("use FirestoreDocLiveData")
+class UserLiveData : MutableLiveData<ModelUser>() {
 
     init {
         value = null
