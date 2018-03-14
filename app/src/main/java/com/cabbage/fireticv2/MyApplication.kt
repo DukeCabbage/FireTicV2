@@ -1,6 +1,7 @@
 package com.cabbage.fireticv2
 
 import android.app.Application
+import android.content.Context
 import com.cabbage.fireticv2.dagger.app.AppComponent
 import com.cabbage.fireticv2.dagger.app.AppModule
 import com.cabbage.fireticv2.dagger.app.DaggerAppComponent
@@ -11,7 +12,16 @@ import timber.log.Timber
 class MyApplication : Application() {
 
     companion object {
-        lateinit var appComponent: AppComponent
+        fun getInstance(context: Context) = context.applicationContext as MyApplication
+    }
+
+    val appComponent: AppComponent by lazy {
+        Timber.v("Initializing app component")
+
+        DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .firebaseModule(FirebaseModule)
+                .build()
     }
 
     override fun onCreate() {
@@ -19,11 +29,5 @@ class MyApplication : Application() {
         Timber.plant(ForestFire())
 
         Stetho.initializeWithDefaults(this)
-
-        Timber.v("Initializing app component")
-        appComponent = DaggerAppComponent.builder()
-                .appModule(AppModule(this))
-                .firebaseModule(FirebaseModule)
-                .build()
     }
 }

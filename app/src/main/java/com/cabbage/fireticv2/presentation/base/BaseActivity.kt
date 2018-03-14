@@ -17,9 +17,9 @@ import java.util.concurrent.atomic.AtomicLong
 abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
-        private val KEY_ACTIVITY_ID = "ACTIVITY_ID"
+        private const val KEY_ACTIVITY_ID = "ACTIVITY_ID"
         private val NextId = AtomicLong(0)
-        private val ComponentMap: MutableMap<Long, ConfigPersistComponent> = HashMap()
+        private val ComponentMap = HashMap<Long, ConfigPersistComponent>()
     }
 
     protected lateinit var activityComponent: ActivityComponent
@@ -32,9 +32,10 @@ abstract class BaseActivity : AppCompatActivity() {
         // being called after a configuration change.
         mActivityId = savedInstanceState?.getLong(KEY_ACTIVITY_ID) ?: NextId.getAndIncrement()
         mActivityId!!.let {
+            val myApp = MyApplication.getInstance(this)
             val configPersistentComponent = ComponentMap[it]
                                             ?: DaggerConfigPersistComponent.builder()
-                                                    .appComponent(MyApplication.appComponent)
+                                                    .appComponent(myApp.appComponent)
                                                     .build()
 
             if (!ComponentMap.containsKey(it)) {
