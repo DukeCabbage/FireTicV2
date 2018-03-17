@@ -1,6 +1,7 @@
 package com.cabbage.fireticv2.presentation.base
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
@@ -46,7 +47,8 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun setUpActionBar(toolbar: Toolbar) {
+    @CallSuper
+    protected open fun setUpActionBar(toolbar: Toolbar) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -75,7 +77,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        Timber.v("Saving activity id=$mActivityId")
+        Timber.v("Saving activity_home id=$mActivityId")
         outState.putLong(KEY_ACTIVITY_ID, mActivityId!!)
     }
 

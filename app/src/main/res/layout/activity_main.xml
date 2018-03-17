@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorGrey400"
-    tools:context=".presentation.home.MainActivity">
+    tools:context=".presentation.main.MainActivity">
 
     <include layout="@layout/include_appbar_collapsing"/>
 

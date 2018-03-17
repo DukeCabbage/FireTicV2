@@ -50,7 +50,7 @@ class Gameboard(context: Context, attributeSet: AttributeSet?)
         sectorViews.forEach { it.callback = this }
     }
 
-    // Validate the move before propagating this event to the activity
+    // Validate the move before propagating this event to the activity_home
     override fun onGridClicked(sectorIndex: Int, gridIndex: Int) {
         // Check if this sector is unlocked
         val unlockedSectorIndex = lastMove?.second

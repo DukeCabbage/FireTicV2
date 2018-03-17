@@ -33,7 +33,7 @@
             android:rowCount="3"
             android:visibility="visible">
 
-            <com.cabbage.fireticv2.presentation.home.DashboardButton
+            <com.cabbage.fireticv2.presentation.main.DashboardButton
                 style="@style/dashboard_button"
                 android:id="@+id/btn_menu_solo"
                 android:layout_column="0"
@@ -41,7 +41,7 @@
                 app:image="@drawable/ic_exit_to_app_80dp"
                 app:label="@string/menu_solo"/>
 
-            <com.cabbage.fireticv2.presentation.home.DashboardButton
+            <com.cabbage.fireticv2.presentation.main.DashboardButton
                 style="@style/dashboard_button"
                 android:id="@+id/btn_menu_online"
                 android:layout_column="2"
@@ -49,7 +49,7 @@
                 app:image="@drawable/ic_exit_to_app_24dp"
                 app:label="@string/menu_online"/>
 
-            <com.cabbage.fireticv2.presentation.home.DashboardButton
+            <com.cabbage.fireticv2.presentation.main.DashboardButton
                 style="@style/dashboard_button"
                 android:id="@+id/btn_menu_statistics"
                 android:layout_column="0"
@@ -57,7 +57,7 @@
                 app:image="@drawable/ic_exit_to_app_80dp"
                 app:label="@string/menu_statistics"/>
 
-            <com.cabbage.fireticv2.presentation.home.DashboardButton
+            <com.cabbage.fireticv2.presentation.main.DashboardButton
                 style="@style/dashboard_button"
                 android:id="@+id/btn_menu_about"
                 android:layout_column="2"

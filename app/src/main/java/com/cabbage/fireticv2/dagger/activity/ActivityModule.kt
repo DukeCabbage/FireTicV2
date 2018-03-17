@@ -3,10 +3,8 @@ package com.cabbage.fireticv2.dagger.activity
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import com.cabbage.fireticv2.dagger.ActivityScope
-import com.cabbage.fireticv2.dagger.ApplicationScope
-import com.cabbage.fireticv2.data.FireTicRepository
 import com.cabbage.fireticv2.presentation.base.MyViewModelFactory
-import com.cabbage.fireticv2.presentation.home.MainViewModel
+import com.cabbage.fireticv2.presentation.main.MainViewModel
 import com.cabbage.fireticv2.presentation.roomlist.RoomListViewModel
 import com.cabbage.fireticv2.presentation.stats.UserAccountViewModel
 import com.tbruyelle.rxpermissions2.RxPermissions

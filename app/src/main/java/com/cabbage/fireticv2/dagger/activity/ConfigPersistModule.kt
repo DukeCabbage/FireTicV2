@@ -1,7 +1,7 @@
 package com.cabbage.fireticv2.dagger.activity
 
-import com.cabbage.fireticv2.presentation.home.MainContract
-import com.cabbage.fireticv2.presentation.home.MainPresenter
+import com.cabbage.fireticv2.presentation.main.MainContract
+import com.cabbage.fireticv2.presentation.main.MainPresenter
 import dagger.Binds
 import dagger.Module
 
