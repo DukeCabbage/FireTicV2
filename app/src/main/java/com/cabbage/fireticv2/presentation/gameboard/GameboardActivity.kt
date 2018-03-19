@@ -39,8 +39,8 @@ class GameboardActivity : AppCompatActivity(),
         windowManager.defaultDisplay.getSize(size)
         windowWidth = size.x
 
-        val lp = barContainer.layoutParams as FrameLayout.LayoutParams
-        lp.setMargins(-size.x / 2, lp.topMargin, -size.x / 2, lp.bottomMargin)
+//        val lp = barContainer.layoutParams as FrameLayout.LayoutParams
+//        lp.setMargins(-size.x / 2, lp.topMargin, -size.x / 2, lp.bottomMargin)
     }
 
     private fun setUpActionBar() {
@@ -63,20 +63,20 @@ class GameboardActivity : AppCompatActivity(),
     private fun togglePlayerStatusBar(isWinner: Boolean = false) {
         Timber.d("toggleUserIndicator %d", currentPlayer)
         windowWidth?.let { width ->
-            val animator = barContainer.animate()
-            animator.duration = 667L
-            val shiftAmount = if (isWinner)
-                0.6f * width
-            else 0.3f * width
-
-            when (currentPlayer) {
-                Player1Token -> animator.translationX(shiftAmount)
-                Player2Token -> animator.translationX(-shiftAmount)
-                else -> {
-                    animator.translationX(0f)
-                    animator.duration = 0L
-                }
-            }
+//            val animator = barContainer.animate()
+//            animator.duration = 667L
+//            val shiftAmount = if (isWinner)
+//                0.6f * width
+//            else 0.3f * width
+//
+//            when (currentPlayer) {
+//                Player1Token -> animator.translationX(shiftAmount)
+//                Player2Token -> animator.translationX(-shiftAmount)
+//                else -> {
+//                    animator.translationX(0f)
+//                    animator.duration = 0L
+//                }
+//            }
         }
     }
 

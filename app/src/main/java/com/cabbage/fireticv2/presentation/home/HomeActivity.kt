@@ -17,30 +17,31 @@ import kotlinx.android.synthetic.main.include_game_options.*
 
 class HomeActivity : BaseActivity() {
 
+    //region Bottom Sheet
     private val mBottomSheetBehavior by lazy { BottomSheetBehavior.from(bottomSheetNewGame) }
 
-    private val mBottomSheetCallback =
-            object : BottomSheetBehavior.BottomSheetCallback() {
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+    private val mBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
 //                    Timber.v("slideOffset $slideOffset")
-                }
+        }
 
-                override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    if (mBottomSheetState != newState) {
-                        when (mBottomSheetState) {
-                            BottomSheetBehavior.STATE_EXPANDED -> {
-                                overlay?.visibility = View.GONE
-                            }
-                            BottomSheetBehavior.STATE_HIDDEN -> {
-                                overlay?.visibility = View.VISIBLE
-                            }
-                        }
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (mBottomSheetState != newState) {
+                when (mBottomSheetState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        overlay?.visibility = View.GONE
                     }
-                    mBottomSheetState = newState
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay?.visibility = View.VISIBLE
+                    }
                 }
             }
+            mBottomSheetState = newState
+        }
+    }
 
     private var mBottomSheetState = BottomSheetBehavior.STATE_HIDDEN
+    //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

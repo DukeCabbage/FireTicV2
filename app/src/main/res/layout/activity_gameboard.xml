@@ -20,7 +20,7 @@
             android:clipToPadding="false"
             android:padding="24dp"/>
 
-        <include layout="@layout/include_player_status"/>
+        <!--<include layout="@layout/include_player_status"/>-->
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton

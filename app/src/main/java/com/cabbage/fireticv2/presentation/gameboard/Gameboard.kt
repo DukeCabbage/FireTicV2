@@ -9,6 +9,7 @@ import android.widget.Toast
 import butterknife.BindViews
 import butterknife.ButterKnife
 import com.cabbage.fireticv2.R
+import kotlinx.android.synthetic.main.gameboard_sector.view.*
 import timber.log.Timber
 
 class Gameboard(context: Context, attributeSet: AttributeSet?)
@@ -48,6 +49,30 @@ class Gameboard(context: Context, attributeSet: AttributeSet?)
         ButterKnife.bind(this, this)
 
         sectorViews.forEach { it.callback = this }
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+
+        if (oldw != 0 && oldh != 0) {
+            if (w != h) Timber.w("Width and height not matching!")
+            Timber.v("New board size: $w, $h")
+
+            val sectorWidth = (0.24 * w).toInt()
+            val sectorHeight = (0.24 * h).toInt()
+
+            Timber.v("New sector size: $sectorWidth, $sectorHeight")
+
+            post {
+                sectorViews.forEach {
+                    val lp = it.layoutParams
+                    lp.width = sectorWidth
+                    lp.height = sectorHeight
+                    it.layoutParams = lp
+                }
+            }
+
+        }
     }
 
     // Validate the move before propagating this event to the activity_home

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/divider"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:background="@color/player1"/>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.cabbage.fireticv2.presentation.gameboard.Gameboard
+            android:id="@+id/gameboard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:padding="24dp"/>
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:background="@color/player2"/>
+
+</LinearLayout>
