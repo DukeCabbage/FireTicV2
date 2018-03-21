@@ -1,5 +1,8 @@
 package com.cabbage.fireticv2.presentation.home
 
+import android.app.Dialog
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.v7.widget.Toolbar
@@ -8,16 +11,20 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.presentation.base.BaseActivity
+import com.cabbage.fireticv2.presentation.utils.toast
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.btn_new_game.*
 import kotlinx.android.synthetic.main.include_appbar_basic.*
 import kotlinx.android.synthetic.main.include_game_options.*
 
+@Suppress("MemberVisibilityCanBePrivate")
 class HomeActivity : BaseActivity() {
 
     //region Bottom Sheet
+
     private val mBottomSheetBehavior by lazy { BottomSheetBehavior.from(bottomSheetNewGame) }
 
     private val mBottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -41,25 +48,41 @@ class HomeActivity : BaseActivity() {
     }
 
     private var mBottomSheetState = BottomSheetBehavior.STATE_HIDDEN
+
     //endregion
+
+    private var mViewModel: HomeViewModel? = null
+    private var mDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         setUpActionBar(toolbar)
+        setUpBottomSheet()
 
-        mBottomSheetBehavior.state = mBottomSheetState
-        mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetCallback)
-        overlay.setOnTouchListener { _, _ ->
+        val factory = activityComponent.myViewModelFactory()
+        mViewModel = ViewModelProviders.of(this, factory)
+                .get(HomeViewModel::class.java)
+
+        btnLocalGame.setOnClickListener {
             mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            return@setOnTouchListener true
+
+            mDialog?.dismiss()
+            mDialog = HomeActivity.showConfirmDialog(this) { dialog ->
+                mViewModel?.newLocalGame()
+                dialog.dismiss()
+            }
         }
 
-        LayoutInflater.from(this).inflate(R.layout.btn_new_game, toolbar, true)
-        btnNewGame.setOnClickListener { _ -> mBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED }
+        btnNewSoloGame.setOnClickListener { this.toast("TODO") }
+        btnNewOnlineGame.setOnClickListener { this.toast("TODO") }
+    }
 
-//        ButterKnife.bind(this)
+    override fun onStop() {
+        super.onStop()
+        mDialog?.dismiss()
+        mDialog = null
     }
 
     override fun setUpActionBar(toolbar: Toolbar) {
@@ -67,6 +90,18 @@ class HomeActivity : BaseActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        LayoutInflater.from(this).inflate(R.layout.btn_new_game, toolbar, true)
+        btnNewGame.setOnClickListener { _ -> mBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED }
+    }
+
+    private fun setUpBottomSheet() {
+        mBottomSheetBehavior.state = mBottomSheetState
+        mBottomSheetBehavior.setBottomSheetCallback(mBottomSheetCallback)
+        overlay.setOnTouchListener { _, _ ->
+            mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            return@setOnTouchListener true
+        }
     }
 
     override fun onBackPressed() {
@@ -93,5 +128,17 @@ class HomeActivity : BaseActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        fun showConfirmDialog(context: Context, onPositive: (dialog: MaterialDialog) -> Unit) =
+                MaterialDialog.Builder(context)
+                        .title(R.string.dialog_title_reset_game)
+                        .content(R.string.dialog_content_reset_game)
+                        .positiveText(android.R.string.yes)
+                        .negativeText(android.R.string.no)
+                        .onPositive { dialog, _ -> onPositive(dialog) }
+                        .onNegative { dialog, _ -> dialog.dismiss() }
+                        .show()!!
     }
 }

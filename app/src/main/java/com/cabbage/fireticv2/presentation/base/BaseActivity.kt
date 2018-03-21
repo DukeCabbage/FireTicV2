@@ -1,10 +1,12 @@
 package com.cabbage.fireticv2.presentation.base
 
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.widget.Toast
 import com.cabbage.fireticv2.MyApplication
 import com.cabbage.fireticv2.dagger.activity.ActivityComponent
 import com.cabbage.fireticv2.dagger.activity.ActivityModule
@@ -14,7 +16,6 @@ import com.cabbage.fireticv2.presentation.utils.ViewUtil
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicLong
 
-
 abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
@@ -23,7 +24,7 @@ abstract class BaseActivity : AppCompatActivity() {
         private val ComponentMap = HashMap<Long, ConfigPersistComponent>()
     }
 
-    protected lateinit var activityComponent: ActivityComponent
+    lateinit var activityComponent: ActivityComponent
     private var mActivityId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

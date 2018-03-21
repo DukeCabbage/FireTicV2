@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorGrey100"
-    tools:showIn="@layout/fragment_gameboard">
+    tools:showIn="@layout/fragment_home">
 
     <LinearLayout
         android:id="@+id/barContainer"
         android:layout_width="match_parent"
         android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
 
         <View

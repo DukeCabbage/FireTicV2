@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/bottomSheetNewGame"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheetNewGame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorGrey400"
+    android:background="@color/colorGrey100"
     android:elevation="4dp"
     android:orientation="vertical"
     app:behavior_hideable="true"
     app:behavior_skipCollapsed="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
     tools:showIn="@layout/activity_home">
-    
+
     <TextView
         style="@style/bottom_sheet_option"
-        android:text="@string/menu_solo"
+        android:id="@+id/btnNewSoloGame"
+        android:text="@string/btn_new_solo_game"
         android:textSize="16sp"/>
-    
+
     <TextView
         style="@style/bottom_sheet_option"
-        android:text="@string/menu_solo"
+        android:id="@+id/btnLocalGame"
+        android:text="@string/btn_new_local_game"
         android:textSize="16sp"/>
-    
+
     <TextView
         style="@style/bottom_sheet_option"
-        android:text="@string/menu_online"
+        android:id="@+id/btnNewOnlineGame"
+        android:text="@string/btn_new_online_game"
         android:textSize="16sp"/>
 
 </LinearLayout>

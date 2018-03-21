@@ -109,6 +109,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$arch_comp_version"
     kapt "android.arch.lifecycle:compiler:$arch_comp_version"
 
+    implementation "com.afollestad.material-dialogs:core:$material_dialog"
+
     // Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
 

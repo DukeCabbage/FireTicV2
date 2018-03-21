@@ -1,6 +1,7 @@
 package com.cabbage.fireticv2.presentation.utils
 
 import android.content.Context
+import android.widget.Toast
 
 
 @Suppress("unused")
@@ -11,8 +12,14 @@ object ViewUtil {
         else null
     }
 
-    fun dpToPixel(context: Context, dp: Int) :Float {
+    fun dpToPixel(context: Context, dp: Int): Float {
         val metrics = context.resources.displayMetrics
         return dp * (metrics.densityDpi / 160f)
     }
 }
+
+fun Context.toast(messageResId: Int, duration: Int = Toast.LENGTH_LONG) =
+        Toast.makeText(this, messageResId, duration).show()
+
+fun Context.toast(message: String, duration: Int = Toast.LENGTH_LONG) =
+        Toast.makeText(this, message, duration).show()
