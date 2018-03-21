@@ -11,7 +11,6 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.presentation.base.BaseActivity
-import com.cabbage.fireticv2.presentation.gameboard.GameboardActivity
 import com.cabbage.fireticv2.presentation.roomlist.RoomListActivity
 import com.cabbage.fireticv2.presentation.stats.StatsActivity
 import com.cabbage.fireticv2.presentation.utils.ViewUtil
@@ -39,8 +38,7 @@ class MainActivity : BaseActivity(),
 
     @OnClick(R.id.btn_menu_solo)
     fun soloOnClick(v: View) {
-        val intent = Intent(v.context, GameboardActivity::class.java)
-        startActivity(intent)
+
     }
 
     @OnClick(R.id.btn_menu_statistics)
