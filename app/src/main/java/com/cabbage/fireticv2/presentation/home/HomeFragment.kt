@@ -2,7 +2,6 @@ package com.cabbage.fireticv2.presentation.home
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.graphics.Point
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -11,20 +10,22 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.data.Outcome
-import com.cabbage.fireticv2.presentation.gameboard.Player1Token
-import com.cabbage.fireticv2.presentation.gameboard.Player2Token
+import com.cabbage.fireticv2.presentation.gameboard.*
+import com.cabbage.fireticv2.presentation.utils.toast
+import com.cabbage.fireticv2.presentation.utils.windowWidth
+
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.include_player_status.*
 import timber.log.Timber
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(),
+                     Gameboard.Delegate {
 
-    private var windowWidth: Int? = null
     private var currentPlayer: Long = Player1Token
 
-    private val mViewModel: HomeViewModel
-        get() = ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
-
+    private val mViewModel by lazy {
+        ViewModelProviders.of(activity!!).get(HomeViewModel::class.java)
+    }
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
@@ -35,19 +36,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adjustGameboardSize()
+        adjustPlayerStatusBar()
 
-        val size = Point()
-        activity?.windowManager?.defaultDisplay?.getSize(size)
-        windowWidth = size.x
-
-        Timber.i("bar is null: ${barContainer == null}")
-
-        (barContainer?.layoutParams as? FrameLayout.LayoutParams)?.let { lp ->
-            lp.setMargins(-size.x / 2, lp.topMargin, -size.x / 2, lp.bottomMargin)
-        }
-
-//        barContainer?.postDelayed( { Timber.i("" + barContainer?.layoutParams?.width) },1000)
-
+        // Dev
         fabTest?.setOnClickListener {
             //            currentPlayer = -currentPlayer
 //            togglePlayerStatusBar()
@@ -57,7 +48,7 @@ class HomeFragment : Fragment() {
             val correct = "rOqLbgPOQwYbHqDzbdG1"
 
             mViewModel.getGame(correct).observe(this, Observer {
-//            mViewModel.createNewGame().observe(this, Observer {
+                //            mViewModel.createNewGame().observe(this, Observer {
                 when (it) {
                     is Outcome.Progress -> Timber.w("loading: ${it.loading}")
                     is Outcome.Success -> Timber.w(it.data.toString())
@@ -67,8 +58,10 @@ class HomeFragment : Fragment() {
         }
 
         fabTest2?.setOnClickListener {
-            mViewModel.sthCrazy(0,3,-1)
+            mViewModel.sthCrazy(0, 3, -1)
         }
+
+        gameboard.delegate = this
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -92,27 +85,62 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // Extend the player status bar outside the window, so it can be shifted left and right
+    private fun adjustPlayerStatusBar() {
+        (barContainer?.layoutParams as? FrameLayout.LayoutParams)?.let { lp ->
+            lp.setMargins(
+                    -activity.windowWidth / 2,
+                    lp.topMargin,
+                    -activity.windowWidth / 2,
+                    lp.bottomMargin
+            )
+        }
+    }
+
     // Shift the player bar left and right according to who's turn it is to play
+    // TODO: Need landscape version
     private fun togglePlayerStatusBar(isWinner: Boolean = false) {
         Timber.d("toggleUserIndicator %d", currentPlayer)
 
         if (barContainer == null) return
 
-        windowWidth?.let { width ->
-            val animator = barContainer!!.animate()
-            animator.duration = 667L
-            val shiftAmount = if (isWinner)
-                0.6f * width
-            else 0.3f * width
+        val animator = barContainer!!.animate()
+        animator.duration = 667L
+        val shiftAmount = if (isWinner)
+            0.6f * activity.windowWidth
+        else 0.3f * activity.windowWidth
 
-            when (currentPlayer) {
-                Player1Token -> animator.translationX(shiftAmount)
-                Player2Token -> animator.translationX(-shiftAmount)
-                else -> {
-                    animator.translationX(0f)
-                    animator.duration = 0L
-                }
+        when (currentPlayer) {
+            Player1Token -> animator.translationX(shiftAmount)
+            Player2Token -> animator.translationX(-shiftAmount)
+            else -> {
+                animator.translationX(0f)
+                animator.duration = 0L
             }
+        }
+    }
+
+    override fun makeMove(gameboard: Gameboard, move: Pair<Int, Int>)
+            : Triple<Int, Int, Long>? {
+        // TODO: check if it's player's turn
+        val previousPlayer = currentPlayer
+        currentPlayer = -currentPlayer
+        this.togglePlayerStatusBar()
+
+        // TODO: transmit this move to some kind of repository
+
+        return Triple(move.first, move.second, previousPlayer)
+    }
+
+    override fun isGameOver(gameboard: Gameboard): Boolean {
+        val winner = checkWin(gameboard.sectorOwners)
+        if (winner == OpenGrid) {
+            return false
+        } else {
+            currentPlayer = winner
+            togglePlayerStatusBar(isWinner = true)
+            activity?.toast("Game over!")
+            return true
         }
     }
 }
