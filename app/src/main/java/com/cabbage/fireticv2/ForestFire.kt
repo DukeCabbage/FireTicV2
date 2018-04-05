@@ -9,6 +9,7 @@ import timber.log.Timber
 class ForestFire : Timber.DebugTree() {
 
     override fun createStackElementTag(element: StackTraceElement): String {
-        return super.createStackElementTag(element) + ':' + element.lineNumber
+        return element.fileName + ":" + element.lineNumber
+//        return super.createStackElementTag(element) + ':' + element.lineNumber
     }
 }

@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.cabbage.fireticv2.R
+import com.cabbage.fireticv2.data.Outcome
 import com.cabbage.fireticv2.presentation.gameboard.Player1Token
 import com.cabbage.fireticv2.presentation.gameboard.Player2Token
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -48,8 +49,25 @@ class HomeFragment : Fragment() {
 //        barContainer?.postDelayed( { Timber.i("" + barContainer?.layoutParams?.width) },1000)
 
         fabTest?.setOnClickListener {
-            currentPlayer = -currentPlayer
-            togglePlayerStatusBar()
+            //            currentPlayer = -currentPlayer
+//            togglePlayerStatusBar()
+
+
+            val wrong = "b1379553-2008-4cbb-aa9a-ce14701438e5"
+            val correct = "rOqLbgPOQwYbHqDzbdG1"
+
+            mViewModel.getGame(correct).observe(this, Observer {
+//            mViewModel.createNewGame().observe(this, Observer {
+                when (it) {
+                    is Outcome.Progress -> Timber.w("loading: ${it.loading}")
+                    is Outcome.Success -> Timber.w(it.data.toString())
+                    is Outcome.Failure -> Timber.w(it.e.message)
+                }
+            })
+        }
+
+        fabTest2?.setOnClickListener {
+            mViewModel.sthCrazy(0,3,-1)
         }
     }
 

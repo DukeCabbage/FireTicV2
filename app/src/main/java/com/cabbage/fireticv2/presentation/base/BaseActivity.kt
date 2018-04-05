@@ -1,12 +1,10 @@
 package com.cabbage.fireticv2.presentation.base
 
-import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
-import android.widget.Toast
 import com.cabbage.fireticv2.MyApplication
 import com.cabbage.fireticv2.dagger.activity.ActivityComponent
 import com.cabbage.fireticv2.dagger.activity.ActivityModule

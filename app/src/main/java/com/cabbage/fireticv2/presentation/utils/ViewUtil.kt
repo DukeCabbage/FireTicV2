@@ -1,8 +1,10 @@
 package com.cabbage.fireticv2.presentation.utils
 
+import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.support.v4.app.Fragment
 import android.widget.Toast
-
 
 @Suppress("unused")
 object ViewUtil {
@@ -17,6 +19,13 @@ object ViewUtil {
         return dp * (metrics.densityDpi / 160f)
     }
 }
+
+val Activity.isLandscape: Boolean
+    get() = resources.configuration.orientation == ORIENTATION_LANDSCAPE
+
+
+val Fragment.isLandscape: Boolean?
+    get() = activity?.isLandscape
 
 fun Context.toast(messageResId: Int, duration: Int = Toast.LENGTH_LONG) =
         Toast.makeText(this, messageResId, duration).show()
