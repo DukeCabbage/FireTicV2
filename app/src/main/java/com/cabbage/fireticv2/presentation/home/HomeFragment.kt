@@ -40,7 +40,7 @@ class HomeFragment : Fragment(),
 
         // Dev
         fabTest?.setOnClickListener {
-            //            currentPlayer = -currentPlayer
+//            currentPlayer = -currentPlayer
 //            togglePlayerStatusBar()
 
 

@@ -1,6 +1,6 @@
 package com.cabbage.fireticv2.presentation.gameboard
 
-import android.support.annotation.IntDef
+import android.support.annotation.LongDef
 import timber.log.Timber
 
 const val GridCount = 9
@@ -10,7 +10,7 @@ const val OpenGrid = 0L
 const val Player1Token = 1L
 const val Player2Token = -1L
 
-@IntDef(OpenGrid, Player1Token, Player2Token)
+@LongDef(OpenGrid, Player1Token, Player2Token)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Player
 
