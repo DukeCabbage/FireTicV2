@@ -1,7 +1,6 @@
 package com.cabbage.fireticv2.presentation.home
 
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
@@ -19,8 +18,8 @@ import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.btn_new_game.*
 import kotlinx.android.synthetic.main.include_appbar_basic.*
 import kotlinx.android.synthetic.main.include_game_options.*
+import javax.inject.Inject
 
-@Suppress("MemberVisibilityCanBePrivate")
 class HomeActivity : BaseActivity() {
 
     //region Bottom Sheet
@@ -51,28 +50,23 @@ class HomeActivity : BaseActivity() {
 
     //endregion
 
-    private var mViewModel: HomeViewModel? = null
+    @Inject lateinit var mViewModel: HomeViewModel
     private var mDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activityComponent.inject(this)
+
         setContentView(R.layout.activity_home)
 
         setUpActionBar(toolbar)
         setUpBottomSheet()
 
-        val factory = activityComponent.myViewModelFactory()
-        mViewModel = ViewModelProviders.of(this, factory)
-                .get(HomeViewModel::class.java)
-
         btnLocalGame.setOnClickListener {
             mBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
             mDialog?.dismiss()
-            mDialog = HomeActivity.showConfirmDialog(this) { dialog ->
-                mViewModel?.newLocalGame()
-                dialog.dismiss()
-            }
+//            mDialog = showConfirmDialog(this) { mViewModel.newLocalGame() }
         }
 
         btnNewSoloGame.setOnClickListener { this.toast("TODO") }
@@ -91,6 +85,7 @@ class HomeActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        // Add a 'New Game' button
         LayoutInflater.from(this).inflate(R.layout.btn_new_game, toolbar, true)
         btnNewGame.setOnClickListener { _ -> mBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED }
     }
@@ -131,14 +126,14 @@ class HomeActivity : BaseActivity() {
     }
 
     companion object {
-        fun showConfirmDialog(context: Context, onPositive: (dialog: MaterialDialog) -> Unit) =
+        fun showConfirmDialog(context: Context, onPositive: () -> Unit) =
                 MaterialDialog.Builder(context)
                         .title(R.string.dialog_title_reset_game)
                         .content(R.string.dialog_content_reset_game)
+                        .autoDismiss(true)
                         .positiveText(android.R.string.yes)
                         .negativeText(android.R.string.no)
-                        .onPositive { dialog, _ -> onPositive(dialog) }
-                        .onNegative { dialog, _ -> dialog.dismiss() }
+                        .onPositive { _, _ -> onPositive() }
                         .show()!!
     }
 }

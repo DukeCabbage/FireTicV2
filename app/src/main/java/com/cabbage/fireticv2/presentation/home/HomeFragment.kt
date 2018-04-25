@@ -40,25 +40,25 @@ class HomeFragment : Fragment(),
 
         // Dev
         fabTest?.setOnClickListener {
-//            currentPlayer = -currentPlayer
+            //            currentPlayer = -currentPlayer
 //            togglePlayerStatusBar()
 
 
-            val wrong = "b1379553-2008-4cbb-aa9a-ce14701438e5"
-            val correct = "rOqLbgPOQwYbHqDzbdG1"
-
-            mViewModel.getGame(correct).observe(this, Observer {
-                //            mViewModel.createNewGame().observe(this, Observer {
-                when (it) {
-                    is Outcome.Progress -> Timber.w("loading: ${it.loading}")
-                    is Outcome.Success -> Timber.w(it.data.toString())
-                    is Outcome.Failure -> Timber.w(it.e.message)
-                }
-            })
+//            val wrong = "b1379553-2008-4cbb-aa9a-ce14701438e5"
+//            val correct = "rOqLbgPOQwYbHqDzbdG1"
+//
+//            mViewModel.getGame(correct).observe(this, Observer {
+//                //            mViewModel.createNewGame().observe(this, Observer {
+//                when (it) {
+//                    is Outcome.Progress -> Timber.w("loading: ${it.loading}")
+//                    is Outcome.Success -> Timber.w(it.data.toString())
+//                    is Outcome.Failure -> Timber.w(it.e.message)
+//                }
+//            })
         }
 
         fabTest2?.setOnClickListener {
-            mViewModel.sthCrazy(0, 3, -1)
+//            mViewModel.sthCrazy(0, 3, -1)
         }
 
         gameboard.delegate = this
@@ -66,9 +66,9 @@ class HomeFragment : Fragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mViewModel.getGame().observe(this, Observer { model ->
-            Timber.v(model.toString())
-        })
+//        mViewModel.getGame().observe(this, Observer { model ->
+//            Timber.v(model.toString())
+//        })
     }
 
     // Adjust the size of gameboard and its children sectors, keeping gameboard in a square shape,

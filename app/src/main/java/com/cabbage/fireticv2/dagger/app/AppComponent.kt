@@ -3,7 +3,7 @@ package com.cabbage.fireticv2.dagger.app
 import android.content.Context
 import com.cabbage.fireticv2.dagger.ApplicationScope
 import com.cabbage.fireticv2.data.FireTicRepository
-import com.cabbage.fireticv2.presentation.base.MyViewModelFactory
+import com.cabbage.fireticv2.presentation.base.VMFactory
 import dagger.Component
 import javax.inject.Named
 
@@ -21,5 +21,5 @@ interface AppComponent {
 
     fun fireTicRepository(): FireTicRepository
 
-    fun myViewModelFactory(): MyViewModelFactory
+    fun myViewModelFactory(): VMFactory
 }

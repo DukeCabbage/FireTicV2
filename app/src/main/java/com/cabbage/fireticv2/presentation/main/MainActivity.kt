@@ -56,7 +56,7 @@ class MainActivity : BaseActivity(),
 
         configureAppBar()
 
-        activityComponent.inject(this)
+//        activityComponent.inject(this)
 
         mViewModel.firebaseUser().observe(this, Observer { firebaseUser ->
             when (firebaseUser) {

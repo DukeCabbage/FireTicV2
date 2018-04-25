@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 
 @ApplicationScope
-class MyViewModelFactory
+class VMFactory
 @Inject constructor(private val repository: FireTicRepository)
     : ViewModelProvider.NewInstanceFactory() {
 

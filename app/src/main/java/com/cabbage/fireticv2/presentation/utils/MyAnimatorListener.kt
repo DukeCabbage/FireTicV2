@@ -15,7 +15,7 @@ open class MyAnimatorListener(protected val wfTargetView: WeakReference<View>) :
     override fun onAnimationStart(animator: Animator) {
         wfTargetView.get()?.let {
             if (logEnabled) {
-                Timber.i("Anim start with: ")
+                Timber.v("Anim start with: ")
                 printAttributes(it)
             }
         }
@@ -24,7 +24,7 @@ open class MyAnimatorListener(protected val wfTargetView: WeakReference<View>) :
     override fun onAnimationEnd(animator: Animator) {
         wfTargetView.get()?.let {
             if (logEnabled) {
-                Timber.i("Anim stop with: ")
+                Timber.v("Anim stop with: ")
                 printAttributes(it)
             }
         }
@@ -42,6 +42,6 @@ open class MyAnimatorListener(protected val wfTargetView: WeakReference<View>) :
         val height = view.height
         val elevation = view.elevation
 
-        Timber.i("Width : %d, Scale: %f, x: %f, pivot: %f, height: %d, elevation: %f", width, currentScale, x, pivotX, height, elevation)
+        Timber.v("Width : %d, Scale: %f, x: %f, pivot: %f, height: %d, elevation: %f", width, currentScale, x, pivotX, height, elevation)
     }
 }

@@ -3,16 +3,11 @@ package com.cabbage.fireticv2.data
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.cabbage.fireticv2.dagger.ApplicationScope
-import com.cabbage.fireticv2.data.game.GameRepository
-import com.cabbage.fireticv2.data.game.ModelGame
-import com.cabbage.fireticv2.data.game.ModelMove
+import com.cabbage.fireticv2.data.game.*
 import com.cabbage.fireticv2.data.user.UserRepository
-import com.cabbage.fireticv2.presentation.gameboard.GridCount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -25,6 +20,8 @@ class FireTicRepository
 
     private val firebaseUser = MutableLiveData<FirebaseUser?>()
 
+    private val gamesStore = firestore.collection("games")
+
     init {
         firebaseUser.observeForever { userRepository.userAuthorized(it) }
         auth.addAuthStateListener { firebaseUser.postValue(it.currentUser) }
@@ -34,119 +31,203 @@ class FireTicRepository
 
     //region Game
 
-    private val currentGame = MutableLiveData<ModelGame>()
-
-    fun getCurrentGame(): LiveData<ModelGame> {
-        if (currentGame.value == null) {
-            Timber.i("Create default game")
-            createLocalGame()
-        }
-        return currentGame
-    }
-
-    fun createLocalGame() {
-        currentGame.value = ModelGame(gameId = UUID.randomUUID().toString(), type = "local")
-    }
-
-    fun makeMove(sector: Int, grid: Int, player: Int) {
-        Timber.v("$sector, $grid, $player")
-        val match = sector * GridCount + grid
-        val model = currentGame.value!!
-
-        if (model.grids[match] != 0) {
-            Timber.w("Already set, do nothing")
-            return
-        }
-
-        when (model.type) {
-            "local" -> {
-                val grids = model.grids.mapIndexed { index, item ->
-                    when (index) {
-                        match -> player
-                        else -> item
-                    }
-                }
-                val lastMove = ModelMove.create(sector, grid, player)
-
-                currentGame.value = model.copy(grids = grids, lastMove = lastMove)
-            }
-            else -> throw NotImplementedError()
-        }
-    }
+//    private val currentGame = MutableLiveData<ModelGame>()
+//
+//    fun getCurrentGame(): LiveData<ModelGame> {
+//        if (currentGame.value == null) {
+//            Timber.i("Create default game")
+//            createLocalGame()
+//        }
+//        return currentGame
+//    }
+//
+//    fun createLocalGame() {
+//        currentGame.value = ModelGame(gameId = UUID.randomUUID().toString(), type = "local")
+//    }
+//
+//    fun makeMove(sector: Int, grid: Int, player: Int) {
+//        Timber.v("$sector, $grid, $player")
+//        val match = sector * GridCount + grid
+//        val model = currentGame.value!!
+//
+//        if (model.grids[match] != 0) {
+//            Timber.w("Already set, do nothing")
+//            return
+//        }
+//
+//        when (model.type) {
+//            "local" -> {
+//                val grids = model.grids.mapIndexed { index, item ->
+//                    when (index) {
+//                        match -> player
+//                        else -> item
+//                    }
+//                }
+//                val lastMove = ModelMove.create(sector, grid, player)
+//
+//                currentGame.value = model.copy(grids = grids, lastMove = lastMove)
+//            }
+//            else -> throw NotImplementedError()
+//        }
+//    }
+//
+//    fun getGame(gameId: String): LiveData<Outcome<ModelGame>> {
+//
+//        val result = object : MutableLiveData<Outcome<ModelGame>>() {
+//            private var listenerRegistration: ListenerRegistration? = null
+//
+//            override fun onInactive() {
+//                listenerRegistration?.remove()
+//            }
+//
+//            override fun onActive() {
+//                super.onActive()
+//                listenerRegistration = firestore.collection("games")
+//                        .document(gameId)
+//                        .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+//                            firebaseFirestoreException?.let { this.value = Outcome.failure(it) }
+//                            documentSnapshot?.let {
+//                                if (it.exists()) {
+//                                    this.value = Outcome.success(it.toObject(ModelGame::class.java))
+//                                } else {
+//                                    this.value = Outcome.failure(IllegalStateException("Game $gameId does not exist"))
+//                                }
+//                            }
+//                        }
+//            }
+//        }
+//
+//        result.value = Outcome.progress(true)
+//
+//        return result
+//    }
 
     //endregion
 
-
-    fun createGame(data: ModelGame): LiveData<Outcome<ModelGame>> {
-
+    fun createOnlineGame(): LiveData<Outcome<String>> {
         val newDocRef = firestore.collection("games").document()
         val gameId = newDocRef.id
-        val result = object : MutableLiveData<Outcome<ModelGame>>() {
-            override fun onActive() {
-                super.onActive()
-                firestore.collection("games").document(gameId)
-                        .set(data.copy(gameId = gameId))
-                        .addOnSuccessListener {
-                            newDocRef.get()
-                                    .addOnSuccessListener { this.value = Outcome.success(it.toObject(ModelGame::class.java)) }
-                                    .addOnFailureListener { this.value = Outcome.failure(it) }
-                        }
-                        .addOnFailureListener { this.value = Outcome.failure(it) }
-            }
-        }
+        val userId = userRepository.getSignedInUser().value?.userId
+        val result = MutableLiveData<Outcome<String>>()
 
-        result.value = Outcome.progress(true)
+        if (userId != null) {
+            result.value = Outcome.progress(true)
+
+            val newGame = Game(gameId = gameId, hostId = userId, startTime = Date().time, type = "online")
+
+            newDocRef.set(newGame)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            result.value = Outcome.success(gameId)
+
+                            firestore.collection("users").document(userId)
+                                    .update("currentRoomId", gameId)
+                        } else {
+                            result.value = Outcome.failure(it.exception ?: Error())
+                        }
+                    }
+
+        } else {
+            result.value = Outcome.failure(Error("No user id"))
+        }
 
         return result
     }
 
-    fun getGame(gameId: String): LiveData<Outcome<ModelGame>> {
+    fun startWatching(gameId: String): LiveData<Game> {
+        return LiveGameData(firestore, gameId)
+    }
 
-        val result = object : MutableLiveData<Outcome<ModelGame>>() {
-            private var listenerRegistration: ListenerRegistration? = null
+    fun makeMove(game: Game, move: Move): LiveData<Outcome<Move>> {
 
-            override fun onInactive() {
-                listenerRegistration?.remove()
-            }
-
-            override fun onActive() {
-                super.onActive()
-                listenerRegistration = firestore.collection("games")
-                        .document(gameId)
-                        .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                            firebaseFirestoreException?.let { this.value = Outcome.failure(it) }
-                            documentSnapshot?.let {
-                                if (it.exists()) {
-                                    this.value = Outcome.success(it.toObject(ModelGame::class.java))
-                                } else {
-                                    this.value = Outcome.failure(IllegalStateException("Game $gameId does not exist"))
-                                }
-                            }
-                        }
-            }
-        }
+        val result = MutableLiveData<Outcome<Move>>()
+        val todo = move.copy(timestamp = Date().time)
 
         result.value = Outcome.progress(true)
+
+        firestore.collection("games")
+                .document(game.gameId)
+                .collection("moves")
+                .add(todo)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        result.value = Outcome.success(todo)
+                    } else {
+                        result.value = Outcome.failure(it.exception ?: Error())
+                    }
+                }
 
         return result
     }
 
-    fun sthCrazy(sector: Int, grid: Int, player: Int) {
-        val gameId = "rOqLbgPOQwYbHqDzbdG1"
-        val dataObj = ModelMove.create(sector, grid, player).toMap()
 
-        val index = sector * 9 + grid
-//        val grids: MutableList<Int> = List(81, { i -> if (index == i) player else 0 })
-        val grids = IntArray(8)
+    // Another try
 
-        IntArray(8, { 0 })
+    fun createOnlineGame2(): LiveData<Outcome<String>> {
+        val result = MutableLiveData<Outcome<String>>()
 
-//        val grids = List(81, { i -> if (i == 0) 1 else null })
-//        val grids = List(81, { 0 })
+        val doc = gamesStore.document()
+        val gameId = doc.id
 
-        firestore.collection("games").document(gameId)
-                .update("lastMove", dataObj, "grids", grids)
-                .addOnSuccessListener { Timber.w("Update success") }
-                .addOnFailureListener { Timber.w(it) }
+        val user = userRepository.getSignedInUser().value
+        val userId = user?.userId
+        if (userId == null) {
+            result.value = Outcome.failure(Error("No user id"))
+        } else {
+            result.value = Outcome.progress(true)
+
+            val newGame = Game2(gameId = gameId,
+                                type = "online",
+                                hostId = userId,
+                                hostName = user.name,
+                                startTime = Date().time)
+
+            doc.set(newGame).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    result.value = Outcome.success(gameId)
+
+                    firestore.collection("users").document(userId)
+                            .update("currentRoomId", gameId)
+                } else {
+                    result.value = Outcome.failure(it.exception
+                                                   ?: Error("Unknown create game error"))
+                }
+            }
+        }
+
+        return result
+    }
+
+    fun startWatching2(gameId: String): LiveData<Game2> {
+        return FirestoreDocLiveData(gamesStore.document(gameId), Game2::class.java)
+    }
+
+    fun makeMove2(game: Game2, move: Move): LiveData<Outcome<Move>> {
+
+        val result = MutableLiveData<Outcome<Move>>()
+        val newMove = move.copy(timestamp = Date().time)
+
+        result.value = Outcome.progress(true)
+
+        val newGrids = List(size = 81, init = { i ->
+            when (i) {
+                newMove.position -> newMove.player
+                else -> game.grids?.get(i) ?: 0
+            }
+        })
+
+        val updated = game.copy(grids = newGrids, lastMove = newMove)
+
+        gamesStore.document(game.gameId)
+                .update("grids", newGrids, "lastMove", newMove.toMap())
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        result.value = Outcome.success(newMove)
+                    } else {
+                        result.value = Outcome.failure(it.exception ?: Error())
+                    }
+                }
+
+        return result
     }
 }
