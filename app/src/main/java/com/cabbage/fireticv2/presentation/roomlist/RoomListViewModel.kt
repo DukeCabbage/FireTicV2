@@ -6,7 +6,7 @@ import java.util.*
 
 class RoomListViewModel(private val repository: FireTicRepository) : ViewModel() {
 
-    fun availableRooms() = repository.gameRepository.findAvailableRooms()
+    fun availableRooms() = repository.gameRepo.findAvailableRooms()
 
     fun create() {
         val uid = repository.getFirebaseUser().value?.uid ?: return
@@ -15,6 +15,6 @@ class RoomListViewModel(private val repository: FireTicRepository) : ViewModel()
         val private = rnd < 0.3
         val inviteCode = if (private) "1234" else null
 
-        repository.gameRepository.createRoom(uid, private, inviteCode)
+        repository.gameRepo.createRoom(uid, private, inviteCode)
     }
 }

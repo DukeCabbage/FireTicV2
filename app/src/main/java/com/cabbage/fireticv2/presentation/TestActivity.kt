@@ -6,7 +6,6 @@ import com.cabbage.fireticv2.R
 import com.cabbage.fireticv2.data.FireTicRepository
 import com.cabbage.fireticv2.data.Outcome
 import com.cabbage.fireticv2.data.game.Game
-import com.cabbage.fireticv2.data.game.Game2
 import com.cabbage.fireticv2.data.game.Move
 import com.cabbage.fireticv2.presentation.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_test.*
@@ -25,7 +24,7 @@ class TestActivity : BaseActivity() {
         setContentView(R.layout.activity_test)
         setUpActionBar(toolbar)
 
-        repository.userRepository.getSignedInUser()
+        repository.getCurrentUser()
                 .observe(this, Observer {
                     Timber.w(it.toString())
                 })
@@ -33,7 +32,7 @@ class TestActivity : BaseActivity() {
         fab.setOnClickListener {
 
             lalla("FemmB1JL2yNDHyKotUGN")
-//            repository.createOnlineGame2()
+//            repository.createOnlineGame()
 //                    .observe(this, Observer {
 //                        when (it) {
 //                            is Outcome.Progress -> Timber.w("loading: ${it.loading}")
@@ -48,7 +47,7 @@ class TestActivity : BaseActivity() {
 
         fabAdd.setOnClickListener {
             val move = Move(position = Random().nextInt(81), player = Random().nextInt(3) - 1)
-            repository.makeMove2(game!!, move)
+            repository.makeMove(game!!, move)
                     .observe(this, Observer {
                         when (it) {
                             is Outcome.Progress -> Timber.w("loading: ${it.loading}")
@@ -61,10 +60,10 @@ class TestActivity : BaseActivity() {
         }
     }
 
-    private var game: Game2? = null
+    private var game: Game? = null
 
     private fun lalla(gameId: String) {
-        repository.startWatching2(gameId)
+        repository.startWatching(gameId)
                 .observe(this, Observer {
                     Timber.i(it.toString())
                     game = it

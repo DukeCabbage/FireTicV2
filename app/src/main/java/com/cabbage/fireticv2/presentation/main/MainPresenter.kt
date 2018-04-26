@@ -39,10 +39,10 @@ class MainPresenter
     }
 
     override fun checkIfUserExistsInFirestore(user: FirebaseUser) {
-        repository.userRepository.getUser(user.uid)
+        repository.userRepo.getUser(user.uid)
                 .observe(this.mvpView as LifecycleOwner, Observer {
                     if (it == null) {
-                        repository.userRepository.createUser(user.uid)
+                        repository.userRepo.createUser(user.uid)
                     } else {
                         Timber.w(it.name)
                         mvpView?.toastMessage("signed in as ${it.name}")

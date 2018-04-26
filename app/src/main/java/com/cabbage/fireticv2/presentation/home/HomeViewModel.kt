@@ -12,7 +12,7 @@ class HomeViewModel(private val repository: FireTicRepository) : ViewModel() {
 
     fun firebaseUser() = repository.getFirebaseUser()
 
-    fun signedInUser() = repository.userRepository.getSignedInUser()
+    fun signedInUser() = repository.getCurrentUser()
 
 //    fun getGame() = repository.getCurrentGame()
 //

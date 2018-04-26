@@ -3,6 +3,8 @@ package com.cabbage.fireticv2.data.user
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.cabbage.fireticv2.dagger.ApplicationScope
+import com.cabbage.fireticv2.data.MutableLiveDocument
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import timber.log.Timber
@@ -10,29 +12,28 @@ import javax.inject.Inject
 
 @ApplicationScope
 class UserRepository
-@Inject constructor(@ApplicationScope firestore: FirebaseFirestore) {
+@Inject constructor(@ApplicationScope auth: FirebaseAuth,
+                    @ApplicationScope firestore: FirebaseFirestore) {
 
-    private val usersCollection = firestore.collection("users")
-    private var signedInUserId: String? = null
-    private val signedInUser = UserLiveData()
+    private val usersStore = firestore.collection("users")
+
     private val users: MutableMap<String, MutableLiveData<ModelUser>> = HashMap()
 
-    internal fun userAuthorized(user: FirebaseUser?) {
-        Timber.v("userAuthorized, uid: ${user?.uid}")
+    internal val firebaseUser = MutableLiveData<FirebaseUser>()
+    internal val currentUser = MutableLiveDocument(ModelUser::class.java)
 
-        if (user == null) {
-            users.clear()
-            signedInUserId = null
-            signedInUser.unsetReference()
-        } else {
-            signedInUserId = user.uid
-            signedInUser.setReference(usersCollection.document(user.uid))
+    init {
+        auth.addAuthStateListener {
+            val user = it.currentUser
+            Timber.i("FirebaseAuth state change, uid: ${user?.uid}")
+
+            firebaseUser.postValue(user)
+            if (user == null) {
+                currentUser.document = null
+            } else {
+                currentUser.document = usersStore.document(user.uid)
+            }
         }
-    }
-
-
-    fun getSignedInUser(): LiveData<ModelUser?> {
-        return signedInUser
     }
 
     fun getUser(uid: String): LiveData<ModelUser?> {
@@ -43,7 +44,7 @@ class UserRepository
     fun createUser(uid: String) {
         if (!users.containsKey(uid)) users += Pair(uid, MutableLiveData())
         val model = ModelUser(userId = uid)
-        usersCollection.document(uid)
+        usersStore.document(uid)
                 .set(model)
                 .addOnSuccessListener { users[uid]?.postValue(model) }
                 .addOnFailureListener { Timber.e(it) }
@@ -51,7 +52,7 @@ class UserRepository
 
     private fun fetchUser(uid: String) {
         if (!users.containsKey(uid)) users += Pair(uid, MutableLiveData())
-        usersCollection.document(uid)
+        usersStore.document(uid)
                 .get()
                 .addOnSuccessListener {
                     if (it.exists()) {
@@ -65,7 +66,7 @@ class UserRepository
     }
 
     fun updateUserName(uid: String, newName: String) {
-        usersCollection.document(uid)
+        usersStore.document(uid)
                 .update("name", newName)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
